@@ -8,7 +8,27 @@ import { constructSection } from '../animations/scrollAnimation';
 import { startSwarm } from '../animations/swarmAnimation';
 
 const building = () => document.documentElement.classList.contains('js-build');
-const whenFontsReady = (fn) => (document.fonts?.ready ? document.fonts.ready.then(fn) : fn());
+// The font stylesheet loads without blocking paint (index.html), so first wait for it to arrive
+// (max 3 s), then for the fonts themselves: the build measures text and must see final metrics.
+const fontCss = new Promise((resolve) => {
+  if (window.__fontsCss) return resolve();
+  window.addEventListener('fontscss', resolve, { once: true });
+  setTimeout(resolve, 3000);
+});
+const fontsLoaded = fontCss.then(() =>
+  document.fonts
+    ? Promise.all(
+        [
+          ['1em Anton'],
+          ['1em Inter'],
+          ['600 1em Caveat'],
+          // Hindi: pass Devanagari text, or only the font's Latin subset would load.
+          ...(document.documentElement.lang === 'hi' ? [['800 1em "Noto Sans Devanagari"', 'नमस्ते']] : []),
+        ].map(([font, text]) => document.fonts.load(font, text).catch(() => {})),
+      ).then(() => document.fonts.ready)
+    : undefined,
+);
+const whenFontsReady = (fn) => fontsLoaded.then(fn);
 
 function failSafe(fn) {
   try {

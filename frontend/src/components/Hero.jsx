@@ -3,6 +3,8 @@ import { ArrowRight, Mail, MapPin, Phone, UserRound } from 'lucide-react';
 import { SITE, SKILLS } from '../config';
 import Button from './ui/Button';
 import { pageHref } from '../router';
+import ParticlePortrait from './ParticlePortrait';
+import { useT } from '../i18n';
 
 // Drop your photo at src/assets/images/portrait.jpg (or .png/.webp) and it is used automatically.
 const portrait = Object.values(
@@ -41,14 +43,15 @@ function useMagneticLetters(ref) {
 
     const step = () => {
       let moving = false;
-      letters.forEach((el, i) => {
-        const r = el.getBoundingClientRect();
+      // Read every position first, then write: interleaving the two forces a layout per letter.
+      const rects = letters.map((el) => el.getBoundingClientRect());
+      rects.forEach((r, i) => {
         const d = pointer ? Math.hypot(pointer.x - (r.left + r.width / 2), (pointer.y - (r.top + r.height / 2)) * 0.6) : Infinity;
         const goal = Math.max(0, 1 - d / 420);
         level[i] += (goal - level[i]) * 0.12;
         if (Math.abs(goal - level[i]) > 0.002) moving = true;
-        el.style.setProperty('--m', level[i].toFixed(3));
       });
+      letters.forEach((el, i) => el.style.setProperty('--m', level[i].toFixed(3)));
       raf = moving ? requestAnimationFrame(step) : 0;
     };
     const kick = () => raf || (raf = requestAnimationFrame(step));
@@ -75,6 +78,7 @@ function useMagneticLetters(ref) {
 export default function Hero() {
   const word = useRef(null);
   useMagneticLetters(word);
+  const t = useT();
 
   return (
     <section id="home" data-hero className="relative isolate flex min-h-svh items-center overflow-hidden pt-28 pb-20">
@@ -99,7 +103,7 @@ export default function Hero() {
           <span data-hero-edge data-axis="y" className="edge edge-y top-2 bottom-2 left-0 bg-brand" />
 
           <p data-blueprint data-carry="top" className="font-script text-4xl text-white md:text-5xl">
-            Hello, I'm
+            {t('hero.hello')}
           </p>
 
           <h1
@@ -123,10 +127,10 @@ export default function Hero() {
 
           <p data-blueprint data-carry="left" className="mt-6 flex items-center gap-3 text-sm font-semibold tracking-[0.4em] text-brand">
             <span className="h-px w-8 bg-brand" />
-            {SITE.title}
+            {t('hero.title')}
           </p>
           <p data-blueprint data-carry="right" className="mt-5 max-w-md text-base leading-relaxed text-white/75 md:text-lg">
-            {SITE.tagline}
+            {t('hero.tagline')}
           </p>
 
           <ul data-blueprint className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/80">
@@ -140,7 +144,7 @@ export default function Hero() {
                 ) : (
                   <span className="flex items-center gap-2">
                     <Icon className="size-4 text-brand" />
-                    {label}
+                    {label === SITE.location ? t('site.location') : label}
                   </span>
                 )}
               </li>
@@ -160,9 +164,9 @@ export default function Hero() {
           </ul>
 
           <div data-blueprint className="mt-10 flex flex-wrap items-center gap-6">
-            <Button href={pageHref('projects')}>View projects</Button>
+            <Button href={pageHref('projects')}>{t('hero.cta')}</Button>
             <a data-hero-sub href={pageHref('about')} className="group flex items-center gap-2 text-[11px] font-semibold tracking-[0.25em] text-mute uppercase hover:text-white">
-              About me
+              {t('hero.about')}
               <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </a>
           </div>
@@ -176,7 +180,19 @@ export default function Hero() {
         >
           <div data-media className="absolute inset-3 overflow-hidden bg-ink">
             {portrait ? (
-              <img src={portrait} alt={`${SITE.name} coding at a neon-lit desk setup`} className="size-full object-cover" />
+              <>
+                {/* The largest thing on first screen (LCP): fetch it first. */}
+                <img
+                  src={portrait}
+                  alt={`${SITE.name} coding at a neon-lit desk setup`}
+                  width="960"
+                  height="1088"
+                  fetchPriority="high"
+                  decoding="async"
+                  className="size-full object-cover"
+                />
+                <ParticlePortrait src={portrait} />
+              </>
             ) : (
               <PortraitPlaceholder />
             )}

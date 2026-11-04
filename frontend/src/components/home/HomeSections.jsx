@@ -5,6 +5,7 @@ import { toggleBlueprint } from '../../blueprintMode';
 import { Section, SectionHeading } from '../ui/Section';
 import { openPalette } from '../CommandPalette';
 import Terminal from './Terminal';
+import { useT } from '../../i18n';
 
 const STACK = SKILLS.flatMap((s) => s.items);
 const MOTTO = ['Coding', 'Building', 'Deploying', 'Dreaming'];
@@ -43,15 +44,21 @@ export function Marquee() {
   );
 }
 
+/** Fills {placeholders} in a translated sentence with React nodes. */
+function fill(text, nodes) {
+  return text.split(/(\{\w+\})/).map((part, i) => nodes[part.slice(1, -1)] ?? <span key={i}>{part}</span>);
+}
+
 export function TerminalSection() {
+  const t = useT();
+  const code = (s) => <code key={s} className="text-arrow-cyan">{s}</code>;
   return (
     <Section id="terminal">
       <div className="grid items-center gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <SectionHeading index="//" label="Try it" title={'Talk to\nmy site'} className="mb-8 md:mb-10" />
+          <SectionHeading index="//" label={t('home.tryLabel')} title={t('home.tryTitle')} className="mb-8 md:mb-10" />
           <p data-reveal className="max-w-md text-lg leading-relaxed text-white/75">
-            This portfolio has a working terminal. Type <code className="text-arrow-cyan">help</code>, explore my{' '}
-            <code className="text-arrow-cyan">projects</code>, or try <code className="text-arrow-cyan">sudo hire manish</code>.
+            {fill(t('home.tryText'), { help: code('help'), projects: code('projects'), hire: code('sudo hire manish') })}
           </p>
           <ul data-reveal className="mt-8 flex flex-wrap gap-3">
             <li>
@@ -83,20 +90,15 @@ export function TerminalSection() {
 }
 
 const liveProjects = PROJECTS.filter((p) => !p.placeholder).length;
-const BLURBS = {
-  about: 'Who I am and how I like to work.',
-  services: `${SERVICES.length} ways I can help, from frontend to backend.`,
-  projects: `${liveProjects} live project${liveProjects === 1 ? '' : 's'}, with more on the way.`,
-  skills: `${STACK.length} technologies across frontend, backend and data.`,
-  contact: 'Have an idea? Send me a message.',
-};
+const COUNTS = { services: SERVICES.length, projects: liveProjects, skills: STACK.length };
 
 /** Cards linking to every other page, so Home works as a map of the site. */
 export function Explore() {
+  const t = useT();
   const pages = NAV_LINKS.filter((l) => l.id !== 'home');
   return (
     <Section id="explore" className="bg-ink-2">
-      <SectionHeading index="//" label="Explore" title={'Inside the\nsite'} />
+      <SectionHeading index="//" label={t('home.exploreLabel')} title={t('home.exploreTitle')} />
       <div className="grid gap-px bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
         {pages.map(({ id, label }, i) => (
           <a
@@ -112,8 +114,8 @@ export function Explore() {
               <ArrowUpRight className="size-6 text-mute transition-all duration-500 group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-white" />
             </div>
             <div>
-              <h3 className="font-display text-4xl uppercase md:text-5xl">{label}</h3>
-              <p className="mt-3 text-mute">{BLURBS[id]}</p>
+              <h3 className="font-display text-4xl uppercase md:text-5xl">{t(`nav.${id}`)}</h3>
+              <p className="mt-3 text-mute">{t(`blurb.${id}`, { n: COUNTS[id] })}</p>
             </div>
           </a>
         ))}
@@ -126,8 +128,8 @@ export function Explore() {
         >
           <Command className="size-6" />
           <div>
-            <p className="font-display text-4xl uppercase md:text-5xl">Quick menu</p>
-            <p className="mt-3 text-white/80">Press Ctrl + K anywhere on the site.</p>
+            <p className="font-display text-4xl uppercase md:text-5xl">{t('home.quick')}</p>
+            <p className="mt-3 text-white/80">{t('home.quickText')}</p>
           </div>
         </button>
       </div>

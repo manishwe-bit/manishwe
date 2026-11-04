@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { ArrowRight, Copy, CornerDownLeft, ExternalLink, Frame, ScanLine, Search } from 'lucide-react';
+import { ArrowRight, Copy, CornerDownLeft, Download, ExternalLink, Frame, Gauge, Languages, ScanLine, Search, Sparkles } from 'lucide-react';
 import { NAV_LINKS, SITE, SOCIALS } from '../config';
 import { pageHref } from '../router';
 import { toggleBlueprint } from '../blueprintMode';
 import { toggleXray } from './XRayLens';
+import { toggleHud } from './DevHUD';
+import { openChat } from './AskAI';
+import { toggleLang } from '../i18n';
+import { installApp } from '../pwa';
 
 // Open from anywhere: Ctrl/Cmd + K, or dispatch this event (nav button, guide cursor).
 export const openPalette = () => window.dispatchEvent(new Event('palette:open'));
@@ -21,6 +25,10 @@ function useCommands() {
       })),
       { group: 'Actions', label: 'Toggle blueprint mode', hint: 'B', icon: Frame, run: toggleBlueprint },
       { group: 'Actions', label: 'X-ray: see the code behind the page', hint: 'X', icon: ScanLine, run: toggleXray },
+      { group: 'Actions', label: 'Developer HUD: FPS, vitals, live stats', hint: 'D', icon: Gauge, run: toggleHud },
+      { group: 'Actions', label: 'Talk to MK-01, the AI robot', hint: 'Chat', icon: Sparkles, run: openChat },
+      { group: 'Actions', label: 'Switch language: English / हिन्दी', hint: 'EN/हिं', icon: Languages, run: toggleLang },
+      { group: 'Actions', label: 'Install this site as an app', hint: 'PWA', icon: Download, run: installApp },
       {
         group: 'Actions',
         label: 'Copy email address',

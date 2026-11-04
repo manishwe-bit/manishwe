@@ -16,6 +16,14 @@ export const SITE = {
 // Backend base URL. Empty = same origin (/api is proxied by Vite in dev and by Netlify in production).
 export const API_URL = import.meta.env.VITE_API_URL ?? '';
 
+// Live cursors WebSocket. Netlify's /api proxy can't carry WebSockets, so production talks to Render directly;
+// in dev Vite proxies /api/live to the local server.
+export const LIVE_URL =
+  import.meta.env.VITE_LIVE_URL ??
+  (import.meta.env.DEV
+    ? `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/api/live`
+    : 'wss://manish-kaiwarty-api.onrender.com/api/live');
+
 // Empty url = shown as "Link coming soon".
 export const SOCIALS = [
   { id: 'instagram', label: 'Instagram', handle: '@imanishh02', url: 'https://www.instagram.com/imanishh02' },
@@ -29,6 +37,7 @@ export const NAV_LINKS = [
   { id: 'about', label: 'About' },
   { id: 'services', label: 'Services' },
   { id: 'projects', label: 'Projects' },
+  { id: 'showcase', label: 'Showcase' },
   { id: 'skills', label: 'Skills' },
   { id: 'contact', label: 'Contact' },
 ];

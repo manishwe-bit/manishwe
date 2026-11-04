@@ -1,11 +1,13 @@
 import { SKILLS } from '../config';
 import { Section, SectionHeading } from './ui/Section';
 import ConstructionArrow from './ConstructionArrow';
+import { useT } from '../i18n';
 
 export default function Skills() {
+  const t = useT();
   return (
     <Section id="skills" className="bg-ink-2">
-      <SectionHeading index="04" label="Skills" title="Technologies" />
+      <SectionHeading index="04" label={t('skills.label')} title={t('skills.title')} />
 
       <div className="grid gap-12 md:grid-cols-3 md:gap-8">
         {SKILLS.map(({ group, items }) => (

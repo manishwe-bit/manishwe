@@ -2,16 +2,18 @@ import { SERVICES } from '../config';
 import { Section, SectionHeading } from './ui/Section';
 import ConstructionArrow from './ConstructionArrow';
 import { pageHref } from '../router';
+import { localService, useT } from '../i18n';
 
 export default function Services() {
+  const t = useT();
   return (
     <Section id="services" className="bg-ink-2">
-      <SectionHeading index="02" label="Services" title="What I do" />
+      <SectionHeading index="02" label={t('services.label')} title={t('services.title')} />
 
       <ul className="relative">
         <span data-line className="edge left-0 top-0 w-full" />
-        {SERVICES.map((s, i) => (
-          <li key={s.title} className="group relative">
+        {SERVICES.map((en, i) => ({ en, s: localService(en, i) })).map(({ en, s }, i) => (
+          <li key={en.title} className="group relative">
             <a
               href={pageHref('contact')}
               data-reveal

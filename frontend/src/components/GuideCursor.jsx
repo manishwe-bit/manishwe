@@ -26,7 +26,7 @@ export default function GuideCursor({ page, name = 'Manish' }) {
 
   useEffect(() => {
     const later = (fn, ms) => timers.current.push(setTimeout(fn, ms));
-    const park = () => setPos({ x: window.innerWidth - 120, y: window.innerHeight - 70 });
+    const park = () => setPos({ x: window.innerWidth - 120, y: window.innerHeight - 130 }); // above the MK-01 button
     const cfg = TIPS[page];
     let pointing = false;
     // The guide is fixed to the viewport, so once the page scrolls it would point at the
@@ -89,7 +89,7 @@ export default function GuideCursor({ page, name = 'Manish' }) {
       <span
         role="status"
         className={clsx(
-          'absolute top-12 w-64 border border-arrow-pink/40 bg-ink-2/95 px-4 py-3 text-sm leading-snug text-white/85 shadow-xl backdrop-blur transition-[opacity,transform] duration-300',
+          'absolute top-12 w-64 border border-arrow-pink/40 bg-ink-2/95 px-4 py-3 text-sm leading-snug text-white/85 shadow-xl transition-[opacity,transform] duration-300',
           flip ? 'right-0' : 'left-3',
           tip ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-1 opacity-0',
         )}

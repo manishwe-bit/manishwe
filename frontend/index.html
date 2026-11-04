@@ -19,12 +19,22 @@
     <meta property="og:image:alt" content="Manish Kumar Kaiwarty, Web Developer, at a neon-lit coding desk" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#080A12" />
+    <!-- Installable app (PWA) -->
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts load without blocking first paint (the build animation already waits for document.fonts.ready). -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;800&display=swap"
+      onload="this.onload=null;this.rel='stylesheet';window.__fontsCss=1;dispatchEvent(new Event('fontscss'))"
     />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;800&display=swap" />
+    </noscript>
     <script>
       // Hide constructable elements before first paint; the construction engine reveals them.
       if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {

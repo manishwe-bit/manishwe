@@ -3,11 +3,13 @@ import { ArrowUpRight } from 'lucide-react';
 import { SOCIALS } from '../config';
 import { SOCIAL_ICONS } from './icons';
 import { Section, SectionHeading } from './ui/Section';
+import { useT } from '../i18n';
 
 export default function SocialLinks() {
+  const t = useT();
   return (
     <Section id="social">
-      <SectionHeading index="05" label="Social" title={'Find me\nonline'} />
+      <SectionHeading index="05" label={t('social.label')} title={t('social.title')} />
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {SOCIALS.map(({ id, label, handle, url }) => {
@@ -32,7 +34,7 @@ export default function SocialLinks() {
               </div>
               <div data-frame-content>
                 <p className="font-display text-3xl uppercase">{label}</p>
-                <p className="mt-1 truncate text-sm text-mute">{handle || (url ? '' : 'Link coming soon')}</p>
+                <p className="mt-1 truncate text-sm text-mute">{handle || (url ? '' : t('projects.soon'))}</p>
               </div>
             </a>
           );

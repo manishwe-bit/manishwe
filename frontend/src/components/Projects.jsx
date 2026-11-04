@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { ArrowUpRight, ImageOff } from 'lucide-react';
 import { PROJECTS } from '../config';
 import { Section, SectionHeading } from './ui/Section';
+import { localProjectText, useT } from '../i18n';
 
 // Project images live in src/assets/images/<project.image>.{jpg,png,webp}
 const images = import.meta.glob('../assets/images/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' });
@@ -9,7 +10,7 @@ const findImage = (name) => name && Object.entries(images).find(([path]) => path
 
 function Preview({ project }) {
   const src = findImage(project.image);
-  if (src) return <img src={src} alt={`${project.title} preview`} className="size-full object-cover transition-transform duration-700 group-hover:scale-105" />;
+  if (src) return <img src={src} alt={`${project.title} preview`} loading="lazy" decoding="async" className="size-full object-cover transition-transform duration-700 group-hover:scale-105" />;
   return (
     <div className="flex size-full flex-col items-center justify-center gap-3 bg-ink-2 text-center">
       <ImageOff className="size-8 text-white/20" strokeWidth={1.2} />
@@ -20,6 +21,7 @@ function Preview({ project }) {
 }
 
 function ProjectCard({ project, index, featured }) {
+  const t = useT();
   const hasLink = Boolean(project.url);
   return (
     <article
@@ -34,17 +36,17 @@ function ProjectCard({ project, index, featured }) {
 
         <div className={clsx('flex flex-col p-3 md:p-4', featured && 'lg:col-span-5 lg:py-8')}>
           <p data-frame-content className="text-[11px] font-semibold tracking-[0.3em] text-brand">
-            {String(index + 1).padStart(2, '0')} {project.placeholder && '— COMING SOON'}
+            {String(index + 1).padStart(2, '0')} {project.placeholder && t('projects.comingSoon')}
           </p>
           <h3 data-frame-content className={clsx('mt-3 font-display uppercase', featured ? 'text-5xl md:text-6xl' : 'text-3xl')}>
             {project.title}
           </h3>
 
           {project.placeholder ? (
-            <p data-frame-content className="mt-4 text-mute">This slot is reserved for an upcoming project.</p>
+            <p data-frame-content className="mt-4 text-mute">{t('projects.reserved')}</p>
           ) : (
             <>
-              <p data-frame-content className="mt-4 leading-relaxed text-mute">{project.description}</p>
+              <p data-frame-content className="mt-4 leading-relaxed text-mute">{localProjectText(project)}</p>
               <ul data-frame-content className="mt-6 flex flex-wrap gap-2">
                 {project.tech.length ? (
                   project.tech.map((t) => (
@@ -67,7 +69,7 @@ function ProjectCard({ project, index, featured }) {
                   hasLink ? 'text-white hover:text-brand' : 'pointer-events-none text-white/30',
                 )}
               >
-                {hasLink ? 'View project' : 'Link coming soon'}
+                {hasLink ? t('projects.view') : t('projects.soon')}
                 <ArrowUpRight className="size-4" />
               </a>
             </>
@@ -79,9 +81,10 @@ function ProjectCard({ project, index, featured }) {
 }
 
 export default function Projects() {
+  const t = useT();
   return (
     <Section id="projects">
-      <SectionHeading index="03" label="Projects" title={'Selected\nwork'} />
+      <SectionHeading index="03" label={t('projects.label')} title={t('projects.title')} />
       <div className="grid gap-8 lg:grid-cols-2">
         {PROJECTS.map((p, i) => (
           <ProjectCard key={p.title} project={p} index={i} featured={i === 0} />

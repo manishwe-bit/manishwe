@@ -6,11 +6,13 @@ import Button from './ui/Button';
 import { pageHref } from '../router';
 import { toggleBlueprint, useBlueprint } from '../blueprintMode';
 import { openPalette } from './CommandPalette';
+import { toggleLang, useT } from '../i18n';
 
 export default function Navbar({ page }) {
   const [open, setOpen] = useState(false);
   const active = page;
   const blueprint = useBlueprint();
+  const t = useT();
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -18,7 +20,7 @@ export default function Navbar({ page }) {
 
   return (
     <>
-    <header data-nav className="fixed inset-x-0 top-0 z-50 bg-ink/80 backdrop-blur-md">
+    <header data-nav className="fixed inset-x-0 top-0 z-50 bg-ink/95 md:bg-ink/80 md:backdrop-blur-md">
       <span data-edge="top" className="edge left-0 top-0 w-full" />
       <span data-edge="bottom" className="edge bottom-0 left-0 w-full" />
 
@@ -27,7 +29,7 @@ export default function Navbar({ page }) {
           {SITE.firstName} <span className="text-brand">{SITE.lastName}</span>
         </a>
 
-        <ul data-trace data-trace-radius="24" className="relative hidden items-center gap-8 px-4 py-2 lg:flex">
+        <ul data-trace data-trace-radius="24" className="relative hidden items-center gap-6 px-4 py-2 xl:flex 2xl:gap-8">
           {NAV_LINKS.map(({ id, label }) => (
             <li key={id} data-nav-item>
               <a
@@ -38,7 +40,7 @@ export default function Navbar({ page }) {
                   active === id ? 'text-white' : 'text-mute',
                 )}
               >
-                {label}
+                {t(`nav.${id}`)}
                 <span
                   className={clsx(
                     'absolute -bottom-0.5 left-0 h-px w-full origin-left bg-brand transition-transform duration-500',
@@ -76,16 +78,26 @@ export default function Navbar({ page }) {
           </button>
           <div className="hidden sm:block">
             <Button href={pageHref('contact')} variant="outline" size="sm">
-              Let's talk
+              {t('nav.talk')}
             </Button>
           </div>
+          <button
+            type="button"
+            data-nav-item
+            onClick={toggleLang}
+            aria-label={t('nav.langLabel')}
+            title={t('nav.langLabel')}
+            className="grid h-11 min-w-11 place-items-center border border-white/10 px-2 text-xs font-semibold text-mute transition-colors hover:border-brand hover:text-white"
+          >
+            {t('nav.lang')}
+          </button>
           <button
             type="button"
             data-nav-item
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
             aria-label={open ? 'Close menu' : 'Open menu'}
-            className="grid size-11 place-items-center border border-white/10 text-white transition-colors hover:border-brand lg:hidden"
+            className="grid size-11 place-items-center border border-white/10 text-white transition-colors hover:border-brand xl:hidden"
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
@@ -93,11 +105,12 @@ export default function Navbar({ page }) {
       </nav>
     </header>
 
-      {/* Mobile menu — kept outside <header>: its backdrop-blur would make it the
-          containing block for this fixed panel and clip it to the header's height. */}
+      {/* Mobile menu — kept outside <header>: its backdrop-blur (md+) would make it the
+          containing block for this fixed panel and clip it to the header's height.
+          Shown below xl: seven links don't fit beside the brand on narrower screens. */}
       <div
         className={clsx(
-          'fixed inset-x-0 top-18 bottom-0 z-40 overflow-y-auto bg-ink transition-[opacity,visibility] duration-300 lg:hidden',
+          'fixed inset-x-0 top-18 bottom-0 z-40 overflow-y-auto bg-ink transition-[opacity,visibility] duration-300 xl:hidden',
           open ? 'visible opacity-100' : 'invisible opacity-0',
         )}
       >
@@ -111,7 +124,7 @@ export default function Navbar({ page }) {
                 className="flex items-baseline gap-4 py-5 font-display text-4xl uppercase transition-colors hover:text-brand"
               >
                 <span className="font-sans text-xs text-brand">0{i + 1}</span>
-                {label}
+                {t(`nav.${id}`)}
               </a>
             </li>
           ))}

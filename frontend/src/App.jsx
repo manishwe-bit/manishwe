@@ -14,8 +14,14 @@ import BlueprintInspector from './components/BlueprintInspector.jsx';
 import CommandPalette from './components/CommandPalette.jsx';
 import GuideCursor from './components/GuideCursor.jsx';
 import XRayLens from './components/XRayLens.jsx';
+import DevHUD from './components/DevHUD.jsx';
+import Dock from './components/Dock.jsx';
+import LiveCursors from './components/LiveCursors.jsx';
+import AskAI from './components/AskAI.jsx';
+import Showcase from './components/Showcase.jsx';
+import Admin from './components/Admin.jsx';
 import { Marquee, TerminalSection, Explore } from './components/home/HomeSections.jsx';
-import { NAV_LINKS, SITE } from './config';
+import { API_URL, NAV_LINKS, SITE } from './config';
 import { usePage } from './router';
 
 const PAGES = {
@@ -30,6 +36,8 @@ const PAGES = {
   about: () => <About />,
   services: () => <Services />,
   projects: () => <Projects />,
+  showcase: () => <Showcase />,
+  admin: () => <Admin />,
   skills: () => <Skills />,
   contact: () => (
     <>
@@ -45,8 +53,17 @@ export default function App() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-    const label = NAV_LINKS.find((l) => l.id === page)?.label;
+    const label = NAV_LINKS.find((l) => l.id === page)?.label ?? 'Admin';
     document.title = page === 'home' ? `${SITE.name} — Web Developer` : `${label} — ${SITE.name}`;
+    // Anonymous page-view count for the admin dashboard (just the page name; nothing about the visitor).
+    if (page !== 'admin') {
+      fetch(`${API_URL}/api/hit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ page }),
+        keepalive: true,
+      }).catch(() => {});
+    }
   }, [page]);
 
   return (
@@ -55,13 +72,17 @@ export default function App() {
       {/* key: each page mounts fresh so its construction animation plays again */}
       <main key={page} className="min-h-svh">
         <Page />
-        {page !== 'home' && <NextPage page={page} />}
+        {page !== 'home' && page !== 'admin' && <NextPage page={page} />}
       </main>
       <Footer />
       <WebsiteConstructionAnimation page={page} />
       <GuideCursor page={page} />
       <BlueprintInspector />
+      <LiveCursors page={page} />
       <XRayLens page={page} />
+      <DevHUD page={page} />
+      <Dock />
+      <AskAI />
       <CommandPalette />
     </>
   );

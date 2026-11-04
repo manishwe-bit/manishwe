@@ -1,13 +1,15 @@
 import { SITE } from '../config';
 import { Section, SectionHeading } from './ui/Section';
 import ConstructionArrow from './ConstructionArrow';
+import { useT } from '../i18n';
 
 export default function About() {
+  const t = useT();
   return (
     <Section id="about">
       <div className="grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <SectionHeading index="01" label="About" title={'About\nme'} />
+          <SectionHeading index="01" label={t('about.label')} title={t('about.title')} />
         </div>
 
         <div className="lg:col-span-7 lg:pt-16">
@@ -17,18 +19,18 @@ export default function About() {
               {SITE.name}
             </p>
             <p data-frame-content className="mt-3 text-sm font-semibold tracking-[0.4em] text-brand">
-              {SITE.title}
+              {t('hero.title')}
             </p>
             <p data-frame-content className="mt-8 max-w-2xl text-xl leading-relaxed text-white/80 md:text-2xl">
-              {SITE.about}
+              {t('about.text')}
             </p>
           </div>
 
           <dl className="mt-10 grid gap-px bg-white/10 sm:grid-cols-3">
             {[
-              ['Discipline', 'Web development'],
-              ['Core stack', 'React · Python · FastAPI'],
-              ['Location', SITE.location],
+              [t('about.discipline'), t('about.disciplineValue')],
+              [t('about.stack'), 'React · Python · FastAPI'],
+              [t('about.location'), t('site.location')],
             ].map(([k, v]) => (
               <div key={k} data-reveal className="bg-ink p-6">
                 <dt className="text-[10px] font-semibold tracking-[0.3em] text-mute uppercase">{k}</dt>

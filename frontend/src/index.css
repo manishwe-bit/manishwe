@@ -9,9 +9,10 @@
   --color-arrow-cyan: #65e8ff;
   --color-arrow-pink: #ff91c8;
 
-  --font-display: "Anton", "Impact", sans-serif;
-  --font-script: "Caveat", cursive;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* Noto Sans Devanagari covers Hindi; Google Fonts' unicode-range means it only downloads when Hindi is on screen. */
+  --font-display: "Anton", "Noto Sans Devanagari", "Impact", sans-serif;
+  --font-script: "Caveat", "Noto Sans Devanagari", cursive;
+  --font-sans: "Inter", "Noto Sans Devanagari", ui-sans-serif, system-ui, sans-serif;
 }
 
 @utility shell {
@@ -199,11 +200,21 @@
 /* Hero background word: each letter lifts and glows by --m (0..1) near the pointer */
 .magnet-letter {
   --m: 0;
+  position: relative;
   display: inline-block;
   transform-origin: 50% 100%;
   transform: translateY(calc(var(--m) * -6%)) scaleY(calc(1 + var(--m) * 0.22));
   color: color-mix(in oklab, currentColor, var(--color-brand) calc(var(--m) * 85%));
-  text-shadow: 0 0 calc(var(--m) * 60px) rgb(240 68 68 / calc(var(--m) * 0.55));
+}
+/* Glow as a fading gradient layer: a blurred text-shadow on 22vw letters is far too costly to repaint per frame. */
+.magnet-letter::before {
+  content: "";
+  position: absolute;
+  inset: 5% -15%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgb(240 68 68 / 0.35), transparent);
+  opacity: var(--m);
+  pointer-events: none;
 }
 
 /* X-ray mode (press X): a lens that shows the source code behind the page */
@@ -279,6 +290,306 @@
   animation: xray-blink 1.6s steps(2) infinite;
 }
 
+/* Live cursors: other visitors, with click ripples */
+.live-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transition: opacity 0.4s;
+  will-change: transform;
+}
+.live-cursor > span {
+  position: absolute;
+  left: 12px;
+  top: 17px;
+  padding: 3px 7px;
+  border-radius: 3px;
+  background: var(--c);
+  color: var(--color-ink);
+  font: 600 11px/1.2 var(--font-sans);
+  white-space: nowrap;
+}
+.live-cursor em {
+  font-style: normal;
+  opacity: 0.7;
+}
+.live-ripple {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  margin: -22px 0 0 -22px;
+  border: 2px solid var(--c);
+  border-radius: 50%;
+  animation: live-ripple 0.9s ease-out forwards;
+}
+@keyframes live-ripple {
+  from { transform: scale(0.2); opacity: 1; }
+  to { transform: scale(1.6); opacity: 0; }
+}
+.live-dot,
+.hud-dot {
+  position: relative;
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-arrow-pink);
+}
+.hud-dot {
+  background: var(--color-arrow-cyan);
+  margin-right: 6px;
+}
+/* Pulse ring animated with transform/opacity only (no repaint), unlike a growing box-shadow */
+.live-dot::after,
+.hud-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: live-pulse 1.8s ease-out infinite;
+}
+@keyframes live-pulse {
+  from { transform: scale(1); opacity: 0.6; }
+  70%, to { transform: scale(3); opacity: 0; }
+}
+
+/* MK-01 chat: thinking dots and typing caret */
+.ai-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-mute);
+  animation: ai-bounce 0.9s infinite ease-in-out;
+}
+@keyframes ai-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-5px); opacity: 1; }
+}
+.ai-caret {
+  display: inline-block;
+  width: 7px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -2px;
+  background: var(--color-arrow-cyan);
+  animation: xray-blink 1s steps(2) infinite;
+}
+
+/* MK-01 robot: eyes follow the pointer (--ex/--ey), blink, and react to its state */
+.robot {
+  --ex: 0px;
+  --ey: 0px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+.robot-eyes {
+  transform: translate(var(--ex), var(--ey));
+  transition: transform 0.15s ease-out;
+}
+.robot-eye {
+  fill: var(--color-arrow-cyan);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: robot-blink 4.6s infinite;
+}
+.robot-mouth rect {
+  fill: var(--color-arrow-cyan);
+  opacity: 0.55;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.robot-antenna {
+  fill: var(--color-brand);
+  animation: robot-antenna 2.4s ease-in-out infinite;
+}
+.robot-ear {
+  fill: #2a3064;
+  transition: fill 0.3s;
+}
+.robot--thinking .robot-eyes {
+  animation: robot-scan 1.1s ease-in-out infinite alternate;
+}
+.robot--thinking .robot-antenna {
+  animation-duration: 0.45s;
+}
+.robot--speaking .robot-mouth rect {
+  opacity: 1;
+  animation: robot-talk 0.42s ease-in-out infinite alternate;
+}
+.robot--listening .robot-ear {
+  fill: var(--color-arrow-cyan);
+}
+.robot--listening .robot-eye {
+  fill: var(--color-arrow-pink);
+}
+@keyframes robot-blink {
+  0%, 94%, 100% { transform: scaleY(1); }
+  97% { transform: scaleY(0.1); }
+}
+@keyframes robot-antenna {
+  50% { opacity: 0.35; }
+}
+@keyframes robot-scan {
+  from { transform: translate(-4px, 0); }
+  to { transform: translate(4px, 0); }
+}
+@keyframes robot-talk {
+  from { transform: scaleY(0.6); }
+  to { transform: scaleY(2.2); }
+}
+.robot-led {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #9ef0a4;
+}
+.robot-led--busy {
+  background: var(--color-arrow-cyan);
+  animation: xray-blink 0.6s steps(2) infinite;
+}
+.robot-scan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgb(101 232 255 / 0.08), transparent);
+  transform: translateX(-100%);
+  animation: robot-sweep 3.5s linear infinite;
+}
+@keyframes robot-sweep {
+  to { transform: translateX(100%); }
+}
+.robot-boot {
+  opacity: 0;
+  animation: bp-pop 0.4s ease-out forwards;
+}
+.robot-mic-on {
+  animation: xray-blink 1s steps(2) infinite;
+}
+
+/* Showcase: mini demo websites and the build player */
+.ms-section {
+  background: var(--ms-bg);
+  color: var(--ms-text);
+  animation: ms-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.ms-section,
+.ms-section * {
+  transition: background-color 0.7s, color 0.7s, border-color 0.7s, border-radius 0.7s, outline-color 0.7s, opacity 0.7s;
+}
+@keyframes ms-in {
+  from { clip-path: inset(0 0 100% 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+.ms-wire,
+.ms-wire * {
+  color: transparent !important;
+  background: transparent !important;
+  border-color: rgb(96 165 250 / 0.35) !important;
+}
+.ms-wire {
+  outline: 1px dashed rgb(96 165 250 / 0.7);
+  outline-offset: -1px;
+}
+.ms-wire div,
+.ms-wire ul,
+.ms-wire figure {
+  outline: 1px dashed rgb(96 165 250 / 0.45);
+  outline-offset: -1px;
+}
+.ms-wire :is(h1, h2, h3, p, li, a, span, figcaption) {
+  background: rgb(148 163 184 / 0.22) !important;
+  border-radius: 4px;
+}
+.ms-wire svg {
+  opacity: 0;
+}
+.ms-live .ms-art svg {
+  animation: ms-float 4s ease-in-out infinite;
+}
+.ms-live .ms-card {
+  animation: ms-lift 3s ease-in-out infinite;
+}
+.ms-live .ms-card:nth-child(2) { animation-delay: 0.4s; }
+.ms-live .ms-card:nth-child(3) { animation-delay: 0.8s; }
+.ms-live .ms-card:nth-child(4) { animation-delay: 1.2s; }
+.ms-live .ms-btn {
+  /* !important: the button's inline `background` shorthand would reset these */
+  background-image: linear-gradient(110deg, transparent 35%, rgb(255 255 255 / 0.35) 50%, transparent 65%) !important;
+  background-size: 250% 100% !important;
+  animation: ms-shine 2.4s linear infinite;
+}
+@keyframes ms-float {
+  50% { transform: translateY(-10px) rotate(-4deg); }
+}
+@keyframes ms-lift {
+  50% { transform: translateY(-6px); }
+}
+@keyframes ms-shine {
+  from { background-position: 150% 0; }
+  to { background-position: -50% 0; }
+}
+.bp-canvas {
+  background-color: #f1f5fb;
+  background-image:
+    linear-gradient(rgb(59 130 246 / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(59 130 246 / 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.bp-toast,
+.bp-end {
+  animation: bp-pop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes bp-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+}
+.bp-range {
+  appearance: none;
+  height: 20px;
+  background: transparent;
+  cursor: pointer;
+}
+.bp-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgb(240 68 68 / 0.4);
+}
+.bp-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+}
+.sc-play {
+  position: relative;
+}
+.sc-play::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 1px solid rgb(240 68 68 / 0.6);
+  animation: sc-ring 2s infinite;
+}
+@keyframes sc-ring {
+  from { transform: scale(0.9); opacity: 1; }
+  to { transform: scale(1.35); opacity: 0; }
+}
+
+/* Hindi: wide letter-spacing breaks Devanagari conjuncts, and the display face needs extra weight */
+html[lang="hi"] body *:not(.magnet-letter, [data-hero-bg], code, kbd, pre, .xray-code *) {
+  letter-spacing: normal !important;
+}
+html[lang="hi"] .font-display:not([data-hero-bg]) {
+  font-weight: 800;
+  line-height: 1.15;
+}
+
 /* Infinite marquee (Home) */
 @keyframes marquee {
   to {
@@ -294,6 +605,15 @@
 
 @media (prefers-reduced-motion: reduce) {
   .marquee-track,
+  .live-dot::after,
+  .hud-dot::after,
+  .robot *,
+  .robot-scan,
+  .robot-led--busy,
+  .robot-mic-on,
+  .ms-section,
+  .ms-live *,
+  .sc-play::before,
   .xray-ring::before,
   .xray-ring::after,
   .xray-blink {

@@ -3,6 +3,7 @@ import { SITE, SOCIALS } from '../config';
 import { SOCIAL_ICONS } from './icons';
 import Button from './ui/Button';
 import ContactForm from './ContactForm';
+import { useT } from '../i18n';
 
 function DirectionRing() {
   return (
@@ -22,6 +23,7 @@ function DirectionRing() {
 }
 
 export default function Contact() {
+  const t = useT();
   return (
     <section id="contact" data-section data-swarm className="relative overflow-hidden py-28 md:py-40">
       <span data-divider className="edge left-0 top-0 w-full" />
@@ -29,18 +31,19 @@ export default function Contact() {
         <p data-reveal className="mb-6 flex items-center gap-4 text-[11px] font-semibold tracking-[0.35em] text-mute uppercase">
           <span className="text-brand">06</span>
           <span className="h-px w-10 bg-white/20" />
-          Contact
+          {t('contact.label')}
         </p>
 
         <h2 className="font-display text-[clamp(3.25rem,11vw,10rem)] leading-[0.88] uppercase">
           <span className="block overflow-hidden pb-1">
             <span data-mask-in className="block">
-              Let's work
+              {t('contact.title1')}
             </span>
           </span>
           <span className="block overflow-hidden pb-1">
             <span data-mask-in className="block">
-              together<span className="text-brand">.</span>
+              {t('contact.title2')}
+              <span className="text-brand">.</span>
             </span>
           </span>
         </h2>
@@ -51,7 +54,7 @@ export default function Contact() {
               {SITE.name}
             </p>
             <p data-reveal className="mt-2 text-sm font-semibold tracking-[0.4em] text-brand">
-              {SITE.title}
+              {t('hero.title')}
             </p>
             <a
               data-reveal
@@ -67,11 +70,11 @@ export default function Contact() {
               </a>
               <span className="flex items-center gap-2">
                 <MapPin className="size-4 text-brand" />
-                {SITE.location}
+                {t('site.location')}
               </span>
             </div>
             <div className="mt-10 flex flex-wrap items-center gap-6">
-              <Button href={`mailto:${SITE.email}`}>Send an email</Button>
+              <Button href={`mailto:${SITE.email}`}>{t('contact.email')}</Button>
               <ul data-reveal className="flex gap-3">
                 {SOCIALS.filter((s) => s.id !== 'email').map(({ id, label, url }) => {
                   const Icon = SOCIAL_ICONS[id];
@@ -98,7 +101,7 @@ export default function Contact() {
 
         <div className="mt-20 max-w-3xl">
           <p data-reveal className="mb-6 text-sm font-semibold tracking-[0.4em] text-brand uppercase">
-            Or send a message here
+            {t('contact.or')}
           </p>
           <ContactForm />
         </div>
