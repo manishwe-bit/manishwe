@@ -47,7 +47,7 @@ curl -H "X-Admin-Key: YOUR_ADMIN_KEY" https://manish-kaiwarty.netlify.app/api/me
 1. **MongoDB Atlas:** create a free M0 cluster, a database user, and allow access from `0.0.0.0/0` (Network Access). Copy the `mongodb+srv://…` connection string.
 2. **Render:** New → Blueprint → pick this repo. It reads `render.yaml`. Paste the Atlas string as `MONGODB_URI`. `ADMIN_KEY` is generated for you (Environment tab).
 3. **Netlify:** Add new site → Import from GitHub → pick this repo. It reads `netlify.toml`. Set the site name to `manish-kaiwarty`.
-4. If the Render URL or Netlify site name differ from the ones in `netlify.toml` / `render.yaml`, update them and push.
+4. Check the Render URL is exactly `https://manish-kaiwarty-api.onrender.com`. If Render added a suffix (name taken), put the real URL in `netlify.toml`, otherwise contact-form messages go to the wrong server. Same for the Netlify site name in `render.yaml` (`ALLOWED_ORIGINS`) and `frontend/index.html` (preview tags). Then push.
 
 ### Custom domain (later)
 

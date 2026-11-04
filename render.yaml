@@ -1,7 +1,7 @@
 # Backend: FastAPI on Render (free plan). Create via Render > New > Blueprint.
 services:
   - type: web
-    name: manish-portfolio-api
+    name: manish-kaiwarty-api
     runtime: python
     plan: free
     rootDir: backend

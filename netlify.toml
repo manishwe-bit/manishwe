@@ -11,6 +11,6 @@
 # Replace the host if your Render service gets a different URL.
 [[redirects]]
   from = "/api/*"
-  to = "https://manish-portfolio-api.onrender.com/api/:splat"
+  to = "https://manish-kaiwarty-api.onrender.com/api/:splat"
   status = 200
   force = true
