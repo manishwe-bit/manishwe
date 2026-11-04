@@ -170,6 +170,51 @@
   }
 }
 
+/* Blueprint mode (press B): the site as a design-tool wireframe */
+.blueprint-mode body {
+  background-color: #07142b;
+  background-image:
+    linear-gradient(rgb(59 130 246 / 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(59 130 246 / 0.12) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.blueprint-mode main *,
+.blueprint-mode header nav * {
+  outline: 1px dashed rgb(96 165 250 / 0.45);
+  outline-offset: -1px;
+}
+.blueprint-mode main section,
+.blueprint-mode main [class*="bg-ink"] {
+  background-color: transparent !important;
+}
+.blueprint-mode main img,
+.blueprint-mode .c-tile {
+  filter: grayscale(1) sepia(1) hue-rotate(180deg) saturate(2.5) brightness(0.8);
+}
+.blueprint-mode [data-hero-bg] {
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(96 165 250 / 0.5);
+}
+
+/* Infinite marquee (Home) */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+.marquee-track[data-reverse] {
+  animation-direction: reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
 /* Initial hidden state while the construction sequence runs */
 .js-build [data-reveal],
 .js-build [data-mask-in],

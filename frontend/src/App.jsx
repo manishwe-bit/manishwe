@@ -9,11 +9,23 @@ import SocialLinks from './components/SocialLinks.jsx';
 import Contact from './components/Contact.jsx';
 import Footer from './components/Footer.jsx';
 import WebsiteConstructionAnimation from './components/WebsiteConstructionAnimation.jsx';
+import NextPage from './components/NextPage.jsx';
+import BlueprintInspector from './components/BlueprintInspector.jsx';
+import CommandPalette from './components/CommandPalette.jsx';
+import GuideCursor from './components/GuideCursor.jsx';
+import { Marquee, TerminalSection, Explore } from './components/home/HomeSections.jsx';
 import { NAV_LINKS, SITE } from './config';
 import { usePage } from './router';
 
 const PAGES = {
-  home: () => <Hero />,
+  home: () => (
+    <>
+      <Hero />
+      <Marquee />
+      <TerminalSection />
+      <Explore />
+    </>
+  ),
   about: () => <About />,
   services: () => <Services />,
   projects: () => <Projects />,
@@ -42,9 +54,13 @@ export default function App() {
       {/* key: each page mounts fresh so its construction animation plays again */}
       <main key={page} className="min-h-svh">
         <Page />
+        {page !== 'home' && <NextPage page={page} />}
       </main>
       <Footer />
       <WebsiteConstructionAnimation page={page} />
+      <GuideCursor page={page} />
+      <BlueprintInspector />
+      <CommandPalette />
     </>
   );
 }

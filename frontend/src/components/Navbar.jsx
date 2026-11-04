@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { Menu, X } from 'lucide-react';
+import { Command, Frame, Menu, X } from 'lucide-react';
 import { NAV_LINKS, SITE } from '../config';
 import Button from './ui/Button';
 import { pageHref } from '../router';
+import { toggleBlueprint, useBlueprint } from '../blueprintMode';
+import { openPalette } from './CommandPalette';
 
 export default function Navbar({ page }) {
   const [open, setOpen] = useState(false);
   const active = page;
+  const blueprint = useBlueprint();
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -47,6 +50,29 @@ export default function Navbar({ page }) {
         </ul>
 
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            data-nav-item
+            onClick={toggleBlueprint}
+            aria-pressed={blueprint}
+            title="Blueprint mode (B)"
+            aria-label="Blueprint mode"
+            className={clsx(
+              'hidden size-11 place-items-center border transition-colors md:grid',
+              blueprint ? 'border-[#3b82f6] bg-[#3b82f6]/15 text-[#93c5fd]' : 'border-white/10 text-mute hover:border-[#3b82f6] hover:text-white',
+            )}
+          >
+            <Frame className="size-4" />
+          </button>
+          <button
+            type="button"
+            data-nav-item
+            onClick={openPalette}
+            title="Quick menu (Ctrl + K)"
+            className="hidden h-11 items-center gap-2 border border-white/10 px-3 text-[10px] font-semibold tracking-[0.15em] text-mute transition-colors hover:border-brand hover:text-white md:flex"
+          >
+            <Command className="size-4" /> Ctrl K
+          </button>
           <div className="hidden sm:block">
             <Button href={pageHref('contact')} variant="outline" size="sm">
               Let's talk
