@@ -1,0 +1,2 @@
+# Contact form API -> FastAPI backend on Render (also in netlify.toml for Git deploys)
+/api/*  https://manish-kaiwarty-api.onrender.com/api/:splat  200!
