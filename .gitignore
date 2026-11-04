@@ -1,0 +1,15 @@
+# Separate project, not part of this repo
+renando/
+.claude/
+
+node_modules/
+dist/
+.vite/
+
+.venv/
+__pycache__/
+*.pyc
+
+.env
+.env.*
+!.env.example

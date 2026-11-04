@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #080a12;
+  --color-ink-2: #0d1020;
+  --color-mute: #a7a9b3;
+  --color-brand: #f04444;
+  --color-brand-dark: #a92332;
+  --color-arrow-cyan: #65e8ff;
+  --color-arrow-pink: #ff91c8;
+
+  --font-display: "Anton", "Impact", sans-serif;
+  --font-script: "Caveat", cursive;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@utility shell {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1.25rem;
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ink font-sans text-white antialiased;
+    overflow-x: hidden;
+  }
+  section[id] {
+    scroll-margin-top: 4.5rem;
+  }
+  ::selection {
+    @apply bg-brand text-white;
+  }
+}
+
+@layer components {
+  /* Construction arrows (created by the engine) */
+  .c-arrow {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 40;
+    line-height: 0;
+    pointer-events: none;
+    will-change: transform;
+    filter: drop-shadow(0 0 6px rgb(255 255 255 / 0.25));
+  }
+
+  /* Image pieces carried into place by arrows */
+  .c-tile {
+    position: absolute;
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+    background-repeat: no-repeat;
+    will-change: transform;
+  }
+
+  /* SVG border drawn around a framed element */
+  .frame-svg {
+    position: absolute;
+    left: -1px;
+    top: -1px;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    overflow: visible;
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  /* Thin construction lines */
+  .edge {
+    position: absolute;
+    height: 1px;
+    background: rgb(255 255 255 / 0.14);
+    pointer-events: none;
+  }
+  .edge-y {
+    width: 1px;
+    height: auto;
+  }
+
+  /* Button fill, driven by --fill (0..1) */
+  .btn {
+    --fill: 0;
+  }
+  .btn .btn-fill {
+    transform: scaleX(var(--fill));
+    transform-origin: left center;
+    transition: transform 0.5s cubic-bezier(0.7, 0, 0.2, 1), background-color 0.3s;
+  }
+  .btn:hover {
+    --fill: 1;
+  }
+  .btn-solid {
+    --fill: 1;
+  }
+  .btn-solid:hover .btn-fill {
+    background-color: var(--color-brand-dark);
+  }
+}
+
+/* Initial hidden state while the construction sequence runs */
+.js-build [data-reveal],
+.js-build [data-mask-in],
+.js-build [data-carry],
+.js-build [data-frame-content],
+.js-build [data-media],
+.js-build [data-hero-bg],
+.js-build [data-hero-hello],
+.js-build [data-hero-sub],
+.js-build [data-nav-item],
+.js-build [data-ring-circle],
+.js-build .edge {
+  opacity: 0;
+}
+.js-build .btn-solid {
+  --fill: 0;
+}
