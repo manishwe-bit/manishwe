@@ -16,6 +16,6 @@ services:
       - key: MONGODB_DB
         value: portfolio
       - key: ALLOWED_ORIGINS
-        value: https://manish-kaiwarty.netlify.app,http://localhost:5173
+        value: https://manishwe.netlify.app,http://localhost:5173
       - key: ADMIN_KEY
         generateValue: true
