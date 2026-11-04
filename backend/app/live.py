@@ -59,7 +59,7 @@ def frac(v) -> float | None:
 @router.websocket("/api/live")
 async def live(ws: WebSocket):
     ip = client_ip(ws)
-    if not origin_allowed(ws.headers.get("origin")) or len(peers) >= MAX_PEERS or sum(p.ip == ip for p in peers.values()) >= MAX_PER_IP:
+    if not origin_allowed(ws.headers.get("origin"), ws.headers.get("host")) or len(peers) >= MAX_PEERS or sum(p.ip == ip for p in peers.values()) >= MAX_PER_IP:
         await ws.close(code=1008)
         return
     await ws.accept()

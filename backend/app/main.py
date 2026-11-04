@@ -135,3 +135,12 @@ async def stats(request: Request):
     today = datetime.now(timezone.utc).date()
     days = [(today - timedelta(days=i)).isoformat() for i in range(13, -1, -1)]
     return {**await request.app.state.store.stats(days), "live": len(live.peers)}
+
+
+# One-service mode: when the built frontend is present (the root Dockerfile copies it to STATIC_DIR),
+# serve it from here too, so the whole site is one service with one URL. Mounted last: /api/* wins.
+STATIC_DIR = os.getenv("STATIC_DIR", "")
+if STATIC_DIR and os.path.isdir(STATIC_DIR):
+    from fastapi.staticfiles import StaticFiles
+
+    app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="site")

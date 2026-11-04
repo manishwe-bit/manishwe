@@ -13,16 +13,14 @@ export const SITE = {
   location: 'Bilaspur, Chhattisgarh',
 };
 
-// Backend base URL. Empty = same origin (/api is proxied by Vite in dev and by Netlify in production).
+// Backend base URL. Empty = same origin: the one-service deploy serves the site and /api together,
+// and in dev Vite proxies /api to the local server.
 export const API_URL = import.meta.env.VITE_API_URL ?? '';
 
-// Live cursors WebSocket. Netlify's /api proxy can't carry WebSockets, so production talks to Render directly;
-// in dev Vite proxies /api/live to the local server.
-export const LIVE_URL =
-  import.meta.env.VITE_LIVE_URL ??
-  (import.meta.env.DEV
-    ? `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/api/live`
-    : 'wss://manish-kaiwarty-api.onrender.com/api/live');
+// Live cursors WebSocket. Default: the API on the same host (the one-service deploy, and Vite's proxy in dev).
+// If the frontend is hosted separately from the API, set VITE_LIVE_URL (wss://<api-host>/api/live).
+const API_BASE = API_URL ? new URL(API_URL) : location;
+export const LIVE_URL = import.meta.env.VITE_LIVE_URL ?? `${API_BASE.protocol === 'https:' ? 'wss' : 'ws'}://${API_BASE.host}/api/live`;
 
 // Empty url = shown as "Link coming soon".
 export const SOCIALS = [

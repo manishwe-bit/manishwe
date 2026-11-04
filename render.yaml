@@ -1,56 +1,31 @@
-# Render (free plan), both services from this repo. Create/sync via Render > New > Blueprint.
+# Render blueprint: the whole site (React + FastAPI) as ONE free web service, built from the root Dockerfile.
+# One click: the "Deploy to Render" button in README.md, or Render > New > Blueprint > this repo.
+# Every push to GitHub redeploys automatically.
 services:
-  # Backend: FastAPI (contact form, MK-01 robot, AI website generator, live cursors, admin API).
   - type: web
-    name: manish-kaiwarty-api
-    runtime: python
+    name: manish-kaiwarty
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     plan: free
     region: singapore
-    rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips "*"
     healthCheckPath: /api/health
+    autoDeploy: true
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.12.8
+      # Optional: MongoDB Atlas connection string. Empty = enquiries kept in memory (lost on restart).
       - key: MONGODB_URI
         sync: false
       - key: MONGODB_DB
         value: portfolio
-      # The Render static site below is allowed by pattern (ALLOWED_ORIGIN_REGEX in app/net.py).
-      - key: ALLOWED_ORIGINS
-        value: https://manishwe.netlify.app,http://localhost:5173
-      # Password for the dashboard at /#/admin (copy it from the Render dashboard).
+      # Password for the dashboard at /#/admin (Render generates it; copy it from the Environment tab).
       - key: ADMIN_KEY
         generateValue: true
-      # Contact form -> your inbox: paste a Resend API key in the Render dashboard.
+      # Contact form -> your inbox (free key from resend.com, sign up with NOTIFY_EMAIL).
       - key: RESEND_API_KEY
         sync: false
       - key: NOTIFY_EMAIL
         value: manishkaiwarty@gmail.com
-      # MK-01 robot + AI website generator: paste your Claude API key in the Render dashboard.
+      # MK-01 robot + AI website generator (key from console.anthropic.com).
       - key: ANTHROPIC_API_KEY
         sync: false
       - key: CHAT_DAILY_CAP
         value: "400"
-
-  # Frontend: the React site as a free static site (replaces Netlify). It calls the API directly.
-  - type: web
-    name: manish-kaiwarty-portfolio
-    runtime: static
-    rootDir: frontend
-    buildCommand: npm ci && npm run build
-    staticPublishPath: dist
-    envVars:
-      - key: NODE_VERSION
-        value: "22"
-      - key: VITE_API_URL
-        value: https://manish-kaiwarty-api.onrender.com
-    headers:
-      # Hashed build files never change: cache for a year. The service worker must always be fresh.
-      - path: /assets/*
-        name: Cache-Control
-        value: public, max-age=31536000, immutable
-      - path: /sw.js
-        name: Cache-Control
-        value: no-cache

@@ -8,8 +8,13 @@ ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "http://local
 ALLOWED_ORIGIN_REGEX = os.getenv("ALLOWED_ORIGIN_REGEX", r"https://manish-kaiwarty-portfolio[a-z0-9-]*\.onrender\.com")
 
 
-def origin_allowed(origin: str | None) -> bool:
-    return bool(origin) and (origin in ALLOWED_ORIGINS or bool(re.fullmatch(ALLOWED_ORIGIN_REGEX, origin)))
+def origin_allowed(origin: str | None, host: str | None = None) -> bool:
+    """host: the server's own Host header. A page served by this same service is always allowed."""
+    if not origin:
+        return False
+    if host and origin in (f"https://{host}", f"http://{host}"):
+        return True
+    return origin in ALLOWED_ORIGINS or bool(re.fullmatch(ALLOWED_ORIGIN_REGEX, origin))
 
 
 def client_ip(conn: HTTPConnection) -> str:

@@ -1,14 +1,38 @@
 # Manish Kumar Kaiwarty — Portfolio
 
-Personal portfolio with a working contact form.
+A portfolio that builds itself on screen, with an AI robot (MK-01), an AI website generator,
+live cursors, a Showcase of build replays, Hindi/English, and an admin dashboard.
 
-| Part | Stack | Hosted on |
-| --- | --- | --- |
-| `frontend/` | React 19, Vite, Tailwind CSS 4, GSAP | Netlify |
-| `backend/` | Python, FastAPI | Render |
-| Database | MongoDB | MongoDB Atlas (free M0) |
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/manishkaiwarty00-dotcom/manish-portfolio)
 
-The browser only talks to the Netlify site. Netlify forwards `/api/*` to the Render backend (see `netlify.toml`), so no CORS setup is needed in production.
+| Part | Stack |
+| --- | --- |
+| `frontend/` | React 19, Vite, Tailwind CSS 4, GSAP |
+| `backend/` | Python, FastAPI (also serves the built frontend) |
+| AI | Claude API (MK-01 robot, website generator) |
+| Database | MongoDB Atlas (optional) |
+
+**One service, one URL.** The root `Dockerfile` builds the frontend and runs FastAPI, which serves the
+website and every `/api/*` route together. No CORS or proxy setup needed.
+
+## Deploy (one click)
+
+1. Push this repo to GitHub.
+2. Click **Deploy to Render** above (or Render → New → Blueprint → this repo). It reads `render.yaml`.
+3. When Render asks for values, paste what you have (all optional, the site works without them):
+   - `ANTHROPIC_API_KEY` — turns on MK-01 and the AI website generator ([console.anthropic.com](https://console.anthropic.com)).
+   - `RESEND_API_KEY` — emails every enquiry to you ([resend.com](https://resend.com), sign up with `NOTIFY_EMAIL`).
+   - `MONGODB_URI` — keeps enquiries after restarts (free MongoDB Atlas M0 cluster).
+4. Wait for the build (~3–5 min). Your site is at `https://manish-kaiwarty.onrender.com` (Render may add a suffix).
+
+After that, **every push to GitHub redeploys automatically.**
+
+- **Admin dashboard:** `https://<your-site>/#/admin`. The password is `ADMIN_KEY` from Render → Environment.
+- **Free plan sleep:** a free Render service sleeps after 15 min without visitors, and the next visit takes
+  ~1 minute to wake it. To keep it awake, add a free monitor at [uptimerobot.com](https://uptimerobot.com) that
+  opens `https://<your-site>/api/health` every 10 minutes.
+- **Own domain (optional):** buy one (e.g. a `.in` from any registrar), then Render → your service → Settings →
+  Custom Domains → add it and copy the DNS records Render shows into your registrar. HTTPS is automatic.
 
 ## Run locally
 
@@ -20,35 +44,23 @@ python -m venv .venv
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
 
-# Terminal 2: frontend on http://localhost:5173
+# Terminal 2: frontend on http://localhost:5173 (proxies /api to the backend)
 cd frontend
 npm install
 npm run dev
 ```
 
-Without `MONGODB_URI`, the backend keeps messages in memory (lost on restart). To use Atlas locally, copy `backend/.env.example` to `backend/.env`, fill it in, and start uvicorn with `--env-file .env`.
+Settings go in `backend/.env` (copy `backend/.env.example`), loaded with `uvicorn ... --env-file .env`.
 
 ## API
 
 | Method | Path | Notes |
 | --- | --- | --- |
-| GET | `/api/health` | `{"ok": true, "db": "mongodb"}` |
-| POST | `/api/contact` | `{name, email, message}`. Limited to 5 per IP per 10 min. |
-| GET | `/api/messages` | Needs header `X-Admin-Key: <ADMIN_KEY>`. Latest messages first. |
-
-Read your messages:
-
-```bash
-curl -H "X-Admin-Key: YOUR_ADMIN_KEY" https://manishwe.netlify.app/api/messages
-```
-
-## Deploy
-
-1. **MongoDB Atlas:** create a free M0 cluster, a database user, and allow access from `0.0.0.0/0` (Network Access). Copy the `mongodb+srv://…` connection string.
-2. **Render:** New → Blueprint → pick this repo. It reads `render.yaml`. Paste the Atlas string as `MONGODB_URI`. `ADMIN_KEY` is generated for you (Environment tab).
-3. **Netlify:** Add new site → Import from GitHub → pick this repo. It reads `netlify.toml`. Site name: `manishwe`.
-4. Check the Render URL is exactly `https://manish-kaiwarty-api.onrender.com`. If Render added a suffix (name taken), put the real URL in `netlify.toml`, otherwise contact-form messages go to the wrong server. Same for the Netlify site name in `render.yaml` (`ALLOWED_ORIGINS`) and `frontend/index.html` (preview tags). Then push.
-
-### Custom domain (later)
-
-Netlify → Domain management → Add a domain, then add the DNS records Netlify shows at your registrar. Add the new domain to `ALLOWED_ORIGINS` on Render.
+| GET | `/api/health` | Status, database and email mode |
+| POST | `/api/contact` | Enquiry form; saved and emailed. 5 per IP per 10 min |
+| POST | `/api/chat` | MK-01 robot (Claude with site-control tools) |
+| POST | `/api/generate` | AI website generator (structured output) |
+| WS | `/api/live` | Live cursors |
+| POST | `/api/hit` | Anonymous page-view counter (page name only) |
+| GET | `/api/messages`, `/api/stats` | Admin, header `X-Admin-Key` |
+| PATCH | `/api/messages/{id}` | Admin: set status `new` / `replied` / `done` |

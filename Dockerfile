@@ -1,18 +1,22 @@
-# Frontend as a container, for hosts that build with Docker (e.g. a Render "Docker" web service with an
-# empty Root Directory). Render can also serve it as a free Static Site instead: see render.yaml.
-FROM node:22-alpine AS build
+# The whole site as ONE service: build the React frontend, then run the FastAPI backend,
+# which serves both the website and /api/* (chat, live cursors, forms, admin) from the same URL.
+# Render: New > Web Service > this repo (it finds this Dockerfile), or the "Deploy to Render" button.
+
+FROM node:22-alpine AS frontend
 WORKDIR /app
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 COPY frontend/ ./
-# Where the browser finds the API. Override with --build-arg / the host's build env var.
-ARG VITE_API_URL=https://manish-kaiwarty-api.onrender.com
-ENV VITE_API_URL=$VITE_API_URL
+# Same origin: the API lives on the same host as the site.
+ENV VITE_API_URL=""
 RUN npm run build
 
-FROM nginx:1.27-alpine
-# The nginx image fills ${PORT} into this template at start-up (hosts like Render set PORT).
-COPY deploy/nginx.conf.template /etc/nginx/templates/default.conf.template
-COPY --from=build /app/dist /usr/share/nginx/html
-ENV PORT=10000
+FROM python:3.12-slim
+WORKDIR /app
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/app ./app
+COPY --from=frontend /app/dist ./static
+ENV STATIC_DIR=/app/static PORT=10000
 EXPOSE 10000
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT} --proxy-headers --forwarded-allow-ips "*"
