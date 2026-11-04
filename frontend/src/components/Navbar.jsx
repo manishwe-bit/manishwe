@@ -17,6 +17,7 @@ export default function Navbar({ page }) {
   }, [open]);
 
   return (
+    <>
     <header data-nav className="fixed inset-x-0 top-0 z-50 bg-ink/80 backdrop-blur-md">
       <span data-edge="top" className="edge left-0 top-0 w-full" />
       <span data-edge="bottom" className="edge bottom-0 left-0 w-full" />
@@ -90,11 +91,13 @@ export default function Navbar({ page }) {
           </button>
         </div>
       </nav>
+    </header>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — kept outside <header>: its backdrop-blur would make it the
+          containing block for this fixed panel and clip it to the header's height. */}
       <div
         className={clsx(
-          'fixed inset-x-0 top-18 bottom-0 bg-ink transition-[opacity,visibility] duration-300 lg:hidden',
+          'fixed inset-x-0 top-18 bottom-0 z-40 overflow-y-auto bg-ink transition-[opacity,visibility] duration-300 lg:hidden',
           open ? 'visible opacity-100' : 'invisible opacity-0',
         )}
       >
@@ -119,6 +122,6 @@ export default function Navbar({ page }) {
           </a>
         </div>
       </div>
-    </header>
+    </>
   );
 }
