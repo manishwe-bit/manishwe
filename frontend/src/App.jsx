@@ -13,6 +13,7 @@ import NextPage from './components/NextPage.jsx';
 import BlueprintInspector from './components/BlueprintInspector.jsx';
 import CommandPalette from './components/CommandPalette.jsx';
 import GuideCursor from './components/GuideCursor.jsx';
+import XRayLens from './components/XRayLens.jsx';
 import { Marquee, TerminalSection, Explore } from './components/home/HomeSections.jsx';
 import { NAV_LINKS, SITE } from './config';
 import { usePage } from './router';
@@ -60,6 +61,7 @@ export default function App() {
       <WebsiteConstructionAnimation page={page} />
       <GuideCursor page={page} />
       <BlueprintInspector />
+      <XRayLens page={page} />
       <CommandPalette />
     </>
   );

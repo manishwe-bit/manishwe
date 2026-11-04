@@ -5,7 +5,7 @@ import { openPalette } from './CommandPalette';
 
 // Per page: where the guide flies to, what it says, and when (after the page has built itself).
 const TIPS = {
-  home: { target: '[data-hero] h1', text: 'Hi! I built this page live. Press B to see its blueprint.', delay: 5600 },
+  home: { target: '[data-hero] h1', text: 'Hi! I built this page live. Press X to see its code, or B for its blueprint.', delay: 5600 },
   about: { target: '#about [data-box]', text: 'That’s me. Press Ctrl + K to jump anywhere.', delay: 2200 },
   services: { target: '#services ul', text: 'Pick a service and click it to start a project.', delay: 2200 },
   projects: { target: '#projects article', text: 'Live work. Click “View project” to open it.', delay: 2400 },

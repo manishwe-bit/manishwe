@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
-import { ArrowRight, Copy, CornerDownLeft, ExternalLink, Frame, Search } from 'lucide-react';
+import { ArrowRight, Copy, CornerDownLeft, ExternalLink, Frame, ScanLine, Search } from 'lucide-react';
 import { NAV_LINKS, SITE, SOCIALS } from '../config';
 import { pageHref } from '../router';
 import { toggleBlueprint } from '../blueprintMode';
+import { toggleXray } from './XRayLens';
 
 // Open from anywhere: Ctrl/Cmd + K, or dispatch this event (nav button, guide cursor).
 export const openPalette = () => window.dispatchEvent(new Event('palette:open'));
@@ -19,6 +20,7 @@ function useCommands() {
         run: () => (window.location.hash = pageHref(id)),
       })),
       { group: 'Actions', label: 'Toggle blueprint mode', hint: 'B', icon: Frame, run: toggleBlueprint },
+      { group: 'Actions', label: 'X-ray: see the code behind the page', hint: 'X', icon: ScanLine, run: toggleXray },
       {
         group: 'Actions',
         label: 'Copy email address',

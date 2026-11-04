@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { ArrowRight, Mail, MapPin, Phone, UserRound } from 'lucide-react';
 import { SITE, SKILLS } from '../config';
 import Button from './ui/Button';
@@ -26,13 +27,65 @@ function PortraitPlaceholder() {
   );
 }
 
+const BG_WORD = 'DEVELOPER';
+
+/** Letters of the giant background word rise and glow as the pointer passes over them. */
+function useMagneticLetters(ref) {
+  useEffect(() => {
+    const word = ref.current;
+    if (!word || !matchMedia('(pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const letters = [...word.children];
+    const level = letters.map(() => 0);
+    let pointer = null;
+    let raf = 0;
+
+    const step = () => {
+      let moving = false;
+      letters.forEach((el, i) => {
+        const r = el.getBoundingClientRect();
+        const d = pointer ? Math.hypot(pointer.x - (r.left + r.width / 2), (pointer.y - (r.top + r.height / 2)) * 0.6) : Infinity;
+        const goal = Math.max(0, 1 - d / 420);
+        level[i] += (goal - level[i]) * 0.12;
+        if (Math.abs(goal - level[i]) > 0.002) moving = true;
+        el.style.setProperty('--m', level[i].toFixed(3));
+      });
+      raf = moving ? requestAnimationFrame(step) : 0;
+    };
+    const kick = () => raf || (raf = requestAnimationFrame(step));
+    const onMove = (e) => {
+      pointer = { x: e.clientX, y: e.clientY };
+      kick();
+    };
+    const onLeave = () => {
+      pointer = null;
+      kick();
+    };
+
+    const hero = word.closest('[data-hero]');
+    hero.addEventListener('pointermove', onMove, { passive: true });
+    hero.addEventListener('pointerleave', onLeave);
+    return () => {
+      cancelAnimationFrame(raf);
+      hero.removeEventListener('pointermove', onMove);
+      hero.removeEventListener('pointerleave', onLeave);
+    };
+  }, [ref]);
+}
+
 export default function Hero() {
+  const word = useRef(null);
+  useMagneticLetters(word);
+
   return (
     <section id="home" data-hero className="relative isolate flex min-h-svh items-center overflow-hidden pt-28 pb-20">
       {/* Oversized background typography */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-[3vh] -z-10 overflow-hidden select-none">
-        <span data-hero-bg className="-ml-[1vw] block font-display text-[22vw] leading-[0.8] whitespace-nowrap text-brand-dark/50">
-          DEVELOPER
+        <span ref={word} data-hero-bg className="-ml-[1vw] block font-display text-[22vw] leading-[0.8] whitespace-nowrap text-brand-dark/50">
+          {[...BG_WORD].map((ch, i) => (
+            <span key={i} className="magnet-letter">
+              {ch}
+            </span>
+          ))}
         </span>
       </div>
 
