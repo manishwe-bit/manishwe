@@ -1,5 +1,5 @@
 import gsap from 'gsap';
-import { createArrow, followPath, drawEdge, traceRect, drawButtonBorder, carryIn, assembleImage, isMobile } from './constructionAnimation';
+import { createArrow, followPath, drawEdge, traceRect, drawButtonBorder, carryIn, assembleImage, blueprintBox, clearBlueprint, isMobile } from './constructionAnimation';
 
 const CARRY_COLORS = ['white', 'cyan', 'pink', 'red'];
 
@@ -70,18 +70,27 @@ export function constructHero(hero) {
     tl.add(drawEdge(edge, { color: edgeColors[i % 3], reverse: i % 2 === 1, size: 9, duration: 1.1 }), 0.25 + i * 0.2),
   );
 
-  // Stage 3 — arrows carry in the text, the name rule is drawn, the photo is assembled tile by tile.
-  tl.add(carryContent(hero), 0.9);
-  tl.add(drawEdge(q('[data-name-rule]'), { color: 'white', size: 11, duration: 1.1 }), 1.6);
-  tl.fromTo(qa('[data-hero-sub]'), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, stagger: 0.12, duration: 0.6 }, 2.6);
+  // Blueprint — cursors drag out wireframe boxes where each block of the hero will go.
+  const boxes = [];
+  qa('[data-blueprint]').forEach((el, i) => {
+    const { tl: bt, box } = blueprintBox(hero, el, { color: edgeColors[i % 3] });
+    if (box) boxes.push(box);
+    tl.add(bt, 0.3 + i * 0.14);
+  });
+
+  // Stage 3 — arrows carry the content into the boxes, the name rule is drawn, the photo is assembled tile by tile.
+  tl.add(carryContent(hero), 1.7);
+  tl.add(drawEdge(q('[data-name-rule]'), { color: 'white', size: 11, duration: 1.1 }), 2.4);
+  tl.fromTo(qa('[data-hero-sub]'), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, stagger: 0.12, duration: 0.6 }, 3.4);
 
   const portrait = q('[data-portrait]');
   if (portrait) {
     const mobile = isMobile();
-    tl.add(traceRect(portrait, { stroke: 'red', arrow: 'cyan', size: 12, duration: 1.3 }), 1.2);
-    tl.add(assembleImage(portrait, portrait.querySelector('[data-media]'), { cols: 3, rows: mobile ? 3 : 4, distance: mobile ? 140 : 260 }), 1.8);
+    tl.add(traceRect(portrait, { stroke: 'red', arrow: 'cyan', size: 12, duration: 1.3 }), 1.9);
+    tl.add(assembleImage(portrait, portrait.querySelector('[data-media]'), { cols: 3, rows: mobile ? 3 : 4, distance: mobile ? 140 : 260 }), 2.3);
   }
-  qa('[data-button]').forEach((btn, i) => tl.add(drawButtonBorder(btn), 2.8 + i * 0.2));
+  qa('[data-button]').forEach((btn, i) => tl.add(drawButtonBorder(btn), 3.3 + i * 0.2));
+  tl.add(clearBlueprint(boxes), 4.3);
   return tl;
 }
 

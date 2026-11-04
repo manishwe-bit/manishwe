@@ -5,6 +5,7 @@ import { activateOnCursor, disposeConstruction, isMobile } from '../animations/c
 import { drawNavigation } from '../animations/navigationAnimation';
 import { constructHero, completeConstruction } from '../animations/heroAnimation';
 import { constructSection } from '../animations/scrollAnimation';
+import { startSwarm } from '../animations/swarmAnimation';
 
 /**
  * Runs the website construction sequence:
@@ -18,6 +19,7 @@ export default function WebsiteConstructionAnimation() {
 
     let cancelled = false;
     let stopCursor = () => {};
+    let stopSwarm = () => {};
     const ctx = gsap.context(() => {});
 
     const run = () => {
@@ -33,6 +35,8 @@ export default function WebsiteConstructionAnimation() {
             .add(completeConstruction(hero), '>-0.2');
 
           document.querySelectorAll('[data-section]').forEach((s) => constructSection(s, { mobile }));
+          const swarm = document.querySelector('[data-swarm]');
+          if (swarm) stopSwarm = startSwarm(swarm, { count: mobile ? 14 : 32 });
           ScrollTrigger.refresh();
         });
       } catch (err) {
@@ -47,6 +51,7 @@ export default function WebsiteConstructionAnimation() {
     return () => {
       cancelled = true;
       stopCursor();
+      stopSwarm();
       ctx.revert();
       disposeConstruction();
     };

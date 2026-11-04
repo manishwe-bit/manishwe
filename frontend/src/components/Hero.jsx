@@ -39,16 +39,17 @@ export default function Hero() {
       <span data-hero-edge className="edge left-0 top-[18%] -z-10 w-full" />
       <span data-hero-edge className="edge bottom-[6%] left-0 -z-10 w-full" />
 
-      {/* Each [data-carry] piece is flown into place by an arrow from the given side. */}
+      {/* [data-blueprint] blocks get a wireframe box first; each [data-carry] piece is then flown in by an arrow from the given side. */}
       <div className="shell grid items-center gap-14 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="relative pl-6 md:pl-10">
           <span data-hero-edge data-axis="y" className="edge edge-y top-2 bottom-2 left-0 bg-brand" />
 
-          <p data-carry="top" className="font-script text-4xl text-white md:text-5xl">
+          <p data-blueprint data-carry="top" className="font-script text-4xl text-white md:text-5xl">
             Hello, I'm
           </p>
 
           <h1
+            data-blueprint
             data-trace
             data-trace-radius="40"
             aria-label={SITE.name}
@@ -66,15 +67,15 @@ export default function Hero() {
             <span data-name-rule className="edge inset-x-0 top-0 bg-white/40" />
           </div>
 
-          <p data-carry="left" className="mt-6 flex items-center gap-3 text-sm font-semibold tracking-[0.4em] text-brand">
+          <p data-blueprint data-carry="left" className="mt-6 flex items-center gap-3 text-sm font-semibold tracking-[0.4em] text-brand">
             <span className="h-px w-8 bg-brand" />
             {SITE.title}
           </p>
-          <p data-carry="right" className="mt-5 max-w-md text-base leading-relaxed text-white/75 md:text-lg">
+          <p data-blueprint data-carry="right" className="mt-5 max-w-md text-base leading-relaxed text-white/75 md:text-lg">
             {SITE.tagline}
           </p>
 
-          <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/80">
+          <ul data-blueprint className="mt-7 flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/80">
             {DETAILS.map(({ icon: Icon, label, href }) => (
               <li key={label} data-carry="bottom">
                 {href ? (
@@ -92,7 +93,7 @@ export default function Hero() {
             ))}
           </ul>
 
-          <ul aria-label="Tech stack" className="mt-5 flex flex-wrap gap-2">
+          <ul data-blueprint aria-label="Tech stack" className="mt-5 flex flex-wrap gap-2">
             {STACK.map((s) => (
               <li
                 key={s}
@@ -104,7 +105,7 @@ export default function Hero() {
             ))}
           </ul>
 
-          <div className="mt-10 flex flex-wrap items-center gap-6">
+          <div data-blueprint className="mt-10 flex flex-wrap items-center gap-6">
             <Button href="#projects">View projects</Button>
             <a data-hero-sub href="#about" className="group flex items-center gap-2 text-[11px] font-semibold tracking-[0.25em] text-mute uppercase hover:text-white">
               Scroll
@@ -115,6 +116,7 @@ export default function Hero() {
 
         <figure
           data-portrait
+          data-blueprint
           data-trace
           className="relative mx-auto aspect-[1178/1335] w-full max-w-[22rem] border border-white/10 bg-ink-2/60 sm:max-w-md lg:mr-0 lg:ml-auto lg:max-w-[30rem]"
         >

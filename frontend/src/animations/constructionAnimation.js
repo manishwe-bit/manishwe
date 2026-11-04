@@ -5,9 +5,17 @@ gsap.registerPlugin(ScrollTrigger);
 
 const NS = 'http://www.w3.org/2000/svg';
 
-// Triangular arrow pointing along +x; rotation = travel direction.
-export const ARROW_PATH = 'M15 8 L2 2.5 L5.5 8 L2 13.5 Z';
-export const COLORS = { white: '#ffffff', cyan: '#65E8FF', pink: '#FF91C8', red: '#F04444' };
+// Mouse-pointer cursor, tip at the origin. ARROW_TRANSFORM turns it so the tip sits at
+// (15, 8) of a 16×16 box pointing along +x; rotation = travel direction.
+export const ARROW_PATH = 'M0 0 L0 16 L4.2 12.2 L7 18.6 L9.6 17.4 L6.9 11.2 L12.6 11.2 Z';
+export const ARROW_TRANSFORM = 'translate(15 8) rotate(109.3) scale(0.74)';
+// Where the tip sits inside the arrow box, so the tip (not the box centre) rides the path.
+const TIP = { xPercent: -94, yPercent: -50, transformOrigin: '94% 50%' };
+export const COLORS = { white: '#ffffff', cyan: '#65E8FF', pink: '#FF91C8', red: '#F04444', blue: '#3B82F6' };
+
+export function arrowSvg(color = 'white', size = 12) {
+  return `<svg viewBox="0 0 16 16" width="${size}" height="${size}" overflow="visible"><path d="${ARROW_PATH}" transform="${ARROW_TRANSFORM}" fill="${COLORS[color] ?? color}" stroke="#080A12" stroke-width="1.3" stroke-linejoin="round"/></svg>`;
+}
 
 // Every DOM node the engine creates, so cleanup can remove them all.
 const created = new Set();
@@ -28,9 +36,9 @@ export function createArrow(host, color = 'white', size = 12) {
   const el = document.createElement('span');
   el.className = 'c-arrow';
   el.setAttribute('aria-hidden', 'true');
-  el.innerHTML = `<svg viewBox="0 0 16 16" width="${size}" height="${size}"><path d="${ARROW_PATH}" fill="${COLORS[color] ?? color}"/></svg>`;
+  el.innerHTML = arrowSvg(color, size);
   host.appendChild(track(el));
-  gsap.set(el, { xPercent: -50, yPercent: -50, autoAlpha: 0 });
+  gsap.set(el, { ...TIP, autoAlpha: 0 });
   return el;
 }
 
@@ -277,6 +285,67 @@ export function assembleImage(frame, media, { cols = 3, rows = 3, distance = 240
 
   tl.set(media, { autoAlpha: 1, clipPath: 'none' });
   tl.add(() => tiles.forEach(drop));
+  return tl;
+}
+
+// Rotation that shows the arrow as an ordinary upright mouse pointer.
+const POINTER_UPRIGHT = -109.3;
+
+/**
+ * Design-tool wireframe: a cursor drags out a blue selection box over `target`
+ * (corner handles, size label, + marker) before the real content arrives.
+ * Returns the timeline and the box so the caller can clear it later.
+ */
+export function blueprintBox(host, target, { color = 'cyan', duration = 0.7 } = {}) {
+  const tl = gsap.timeline();
+  if (!host || !target?.offsetParent) return { tl, box: null };
+  const hr = host.getBoundingClientRect();
+  const r = target.getBoundingClientRect();
+  const x = r.left - hr.left - host.clientLeft;
+  const y = r.top - hr.top - host.clientTop;
+  const { width: w, height: h } = r;
+
+  const box = document.createElement('div');
+  box.className = 'c-blueprint';
+  box.setAttribute('aria-hidden', 'true');
+  Object.assign(box.style, { left: `${x}px`, top: `${y}px`, width: `${w}px`, height: `${h}px` });
+  const corners = [['0', '0'], ['100%', '0'], ['100%', '100%'], ['0', '100%']];
+  box.innerHTML =
+    '<span class="c-bp-fill"></span>' +
+    corners.map(([l, t]) => `<i class="c-bp-handle" style="left:${l};top:${t}"></i>`).join('') +
+    `<b class="c-bp-label">${Math.round(w)} × ${Math.round(h)}</b><em class="c-bp-plus">+</em>`;
+  host.appendChild(track(box));
+
+  const fill = box.querySelector('.c-bp-fill');
+  const a = createArrow(host, color, 14);
+  const drag = { p: 0 };
+
+  tl.set(box, { autoAlpha: 1 });
+  tl.set(a, { x, y, rotation: POINTER_UPRIGHT, autoAlpha: 1 });
+  tl.fromTo(box.querySelector('.c-bp-plus'), { autoAlpha: 0, scale: 0.4 }, { autoAlpha: 1, scale: 1, duration: 0.25 }, 0);
+  // Drag from top-left to bottom-right; the selection grows with the cursor.
+  tl.to(drag, {
+    p: 1,
+    duration,
+    ease: 'power2.inOut',
+    onUpdate: () => {
+      gsap.set(fill, { width: w * drag.p, height: h * drag.p });
+      gsap.set(a, { x: x + w * drag.p, y: y + h * drag.p });
+    },
+  }, 0.1);
+  tl.fromTo(box.querySelectorAll('.c-bp-handle'), { scale: 0 }, { scale: 1, stagger: 0.04, duration: 0.2, ease: 'back.out(3)' });
+  tl.fromTo(box.querySelector('.c-bp-label'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2 }, '<');
+  tl.to(a, { x: `+=${16}`, y: `+=${10}`, autoAlpha: 0, duration: 0.35, ease: 'power2.out' });
+  tl.add(() => drop(a));
+  return { tl, box };
+}
+
+/** Fades out blueprint boxes once the real content is in place. */
+export function clearBlueprint(boxes) {
+  const tl = gsap.timeline();
+  if (!boxes.length) return tl;
+  tl.to(boxes, { autoAlpha: 0, duration: 0.45, stagger: 0.05, ease: 'power1.out' });
+  tl.add(() => boxes.forEach(drop));
   return tl;
 }
 

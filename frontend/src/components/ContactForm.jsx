@@ -39,7 +39,7 @@ export default function ContactForm() {
   }
 
   return (
-    <form data-box onSubmit={onSubmit} className="relative grid gap-5 border border-white/10 p-6 md:p-10">
+    <form data-box data-swarm-avoid onSubmit={onSubmit} className="relative grid gap-5 border border-white/10 p-6 md:p-10">
       <div data-frame-content className="grid gap-5 sm:grid-cols-2">
         <label>
           <span className={LABEL}>Name</span>

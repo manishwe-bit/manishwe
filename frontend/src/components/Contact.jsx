@@ -23,9 +23,9 @@ function DirectionRing() {
 
 export default function Contact() {
   return (
-    <section id="contact" data-section className="relative overflow-hidden py-28 md:py-40">
+    <section id="contact" data-section data-swarm className="relative overflow-hidden py-28 md:py-40">
       <span data-divider className="edge left-0 top-0 w-full" />
-      <div className="shell">
+      <div className="shell relative z-10">
         <p data-reveal className="mb-6 flex items-center gap-4 text-[11px] font-semibold tracking-[0.35em] text-mute uppercase">
           <span className="text-brand">06</span>
           <span className="h-px w-10 bg-white/20" />
