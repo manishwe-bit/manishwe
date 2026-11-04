@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { activateOnCursor, disposeConstruction, isMobile } from '../animations/constructionAnimation';
@@ -7,55 +7,75 @@ import { constructHero, completeConstruction } from '../animations/heroAnimation
 import { constructSection } from '../animations/scrollAnimation';
 import { startSwarm } from '../animations/swarmAnimation';
 
+const building = () => document.documentElement.classList.contains('js-build');
+const whenFontsReady = (fn) => (document.fonts?.ready ? document.fonts.ready.then(fn) : fn());
+
+function failSafe(fn) {
+  try {
+    fn();
+  } catch (err) {
+    console.error('Construction animation failed; showing static site.', err);
+    document.documentElement.classList.remove('js-build');
+  }
+}
+
 /**
  * Runs the website construction sequence:
- * intro (nav → hero) on load, scroll construction per section,
- * and cursor-proximity tracing once the intro has finished.
+ * the nav is drawn once on first load; every page (re)builds itself when it opens —
+ * hero intro on Home, scroll construction per section elsewhere — followed by
+ * cursor-proximity tracing and, on Contact, the cursor swarm.
  */
-export default function WebsiteConstructionAnimation() {
+export default function WebsiteConstructionAnimation({ page }) {
+  const firstPage = useRef(true);
+
+  // Nav: drawn once; it stays mounted across pages.
   useEffect(() => {
-    const html = document.documentElement;
-    if (!html.classList.contains('js-build')) return undefined; // reduced motion: static site
+    if (!building()) return undefined; // reduced motion: static site
+    let cancelled = false;
+    const ctx = gsap.context(() => {});
+    whenFontsReady(() => !cancelled && failSafe(() => ctx.add(() => drawNavigation(document.querySelector('[data-nav]')))));
+    return () => {
+      cancelled = true;
+      ctx.revert();
+    };
+  }, []);
+
+  // Page: rebuilt every time a page opens.
+  useEffect(() => {
+    if (!building()) return undefined;
+    const delay = firstPage.current ? 0.5 : 0.1; // let the nav start first on initial load
+    firstPage.current = false;
 
     let cancelled = false;
     let stopCursor = () => {};
     let stopSwarm = () => {};
     const ctx = gsap.context(() => {});
 
-    const run = () => {
+    whenFontsReady(() => {
       if (cancelled) return;
-      try {
+      failSafe(() =>
         ctx.add(() => {
           const mobile = isMobile();
           const hero = document.querySelector('[data-hero]');
-          gsap
-            .timeline({ onComplete: () => (stopCursor = activateOnCursor(document)) })
-            .add(drawNavigation(document.querySelector('[data-nav]')), 0)
-            .add(constructHero(hero), 0.5)
-            .add(completeConstruction(hero), '>-0.2');
+          const tl = gsap.timeline({ delay, onComplete: () => (stopCursor = activateOnCursor(document)) });
+          if (hero) tl.add(constructHero(hero)).add(completeConstruction(hero), '>-0.2');
 
-          document.querySelectorAll('[data-section]').forEach((s) => constructSection(s, { mobile }));
+          document.querySelectorAll('main [data-section]').forEach((s) => constructSection(s, { mobile }));
           const swarm = document.querySelector('[data-swarm]');
           if (swarm) stopSwarm = startSwarm(swarm, { count: mobile ? 14 : 32 });
           ScrollTrigger.refresh();
-        });
-      } catch (err) {
-        console.error('Construction animation failed; showing static site.', err);
-        html.classList.remove('js-build');
-      }
-    };
-
-    if (document.fonts?.ready) document.fonts.ready.then(run);
-    else run();
+        }),
+      );
+    });
 
     return () => {
       cancelled = true;
       stopCursor();
       stopSwarm();
       ctx.revert();
-      disposeConstruction();
+      disposeConstruction('[data-nav]');
     };
-  }, []);
+  }, [page]);
 
   return null;
 }

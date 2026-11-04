@@ -1,6 +1,7 @@
 import { SERVICES } from '../config';
 import { Section, SectionHeading } from './ui/Section';
 import ConstructionArrow from './ConstructionArrow';
+import { pageHref } from '../router';
 
 export default function Services() {
   return (
@@ -12,7 +13,7 @@ export default function Services() {
         {SERVICES.map((s, i) => (
           <li key={s.title} className="group relative">
             <a
-              href="#contact"
+              href={pageHref('contact')}
               data-reveal
               className="grid grid-cols-[3rem_1fr_auto] items-center gap-x-6 gap-y-3 py-8 transition-[padding] duration-500 md:grid-cols-[6rem_1.3fr_1fr_3rem] md:py-10 md:group-hover:pl-6"
             >

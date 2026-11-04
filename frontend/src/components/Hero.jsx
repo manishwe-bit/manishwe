@@ -1,6 +1,7 @@
-import { ArrowDown, Mail, MapPin, Phone, UserRound } from 'lucide-react';
+import { ArrowRight, Mail, MapPin, Phone, UserRound } from 'lucide-react';
 import { SITE, SKILLS } from '../config';
 import Button from './ui/Button';
+import { pageHref } from '../router';
 
 // Drop your photo at src/assets/images/portrait.jpg (or .png/.webp) and it is used automatically.
 const portrait = Object.values(
@@ -106,10 +107,10 @@ export default function Hero() {
           </ul>
 
           <div data-blueprint className="mt-10 flex flex-wrap items-center gap-6">
-            <Button href="#projects">View projects</Button>
-            <a data-hero-sub href="#about" className="group flex items-center gap-2 text-[11px] font-semibold tracking-[0.25em] text-mute uppercase hover:text-white">
-              Scroll
-              <ArrowDown className="size-4 transition-transform group-hover:translate-y-1" />
+            <Button href={pageHref('projects')}>View projects</Button>
+            <a data-hero-sub href={pageHref('about')} className="group flex items-center gap-2 text-[11px] font-semibold tracking-[0.25em] text-mute uppercase hover:text-white">
+              About me
+              <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
             </a>
           </div>
         </div>

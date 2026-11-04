@@ -25,9 +25,17 @@ const drop = (el) => {
   created.delete(el);
 };
 
-export function disposeConstruction() {
-  created.forEach((el) => el.remove());
-  created.clear();
+/**
+ * Removes engine-made nodes. With `keep` (a selector, e.g. the persistent nav), finished
+ * borders inside it survive; in-flight arrows and hover traces are always removed.
+ */
+export function disposeConstruction(keep) {
+  created.forEach((el) => {
+    const finishedFrame = el.classList.contains('frame-svg') && !el.classList.contains('frame-svg--hover');
+    if (keep && finishedFrame && el.closest(keep)) return;
+    el.remove();
+    created.delete(el);
+  });
 }
 
 export const isMobile = () => window.matchMedia('(max-width: 767px)').matches;

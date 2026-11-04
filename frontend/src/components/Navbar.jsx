@@ -3,28 +3,11 @@ import clsx from 'clsx';
 import { Menu, X } from 'lucide-react';
 import { NAV_LINKS, SITE } from '../config';
 import Button from './ui/Button';
+import { pageHref } from '../router';
 
-function useActiveSection(ids) {
-  const [active, setActive] = useState(ids[0]);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
-      { rootMargin: '-45% 0px -50% 0px' },
-    );
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, [ids]);
-  return active;
-}
-
-const IDS = NAV_LINKS.map((l) => l.id);
-
-export default function Navbar() {
+export default function Navbar({ page }) {
   const [open, setOpen] = useState(false);
-  const active = useActiveSection(IDS);
+  const active = page;
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : '';
@@ -36,7 +19,7 @@ export default function Navbar() {
       <span data-edge="bottom" className="edge bottom-0 left-0 w-full" />
 
       <nav className="shell flex h-18 items-center justify-between" aria-label="Main">
-        <a data-nav-item href="#home" className="font-display text-base tracking-[0.12em] whitespace-nowrap sm:text-lg">
+        <a data-nav-item href={pageHref('home')} className="font-display text-base tracking-[0.12em] whitespace-nowrap sm:text-lg">
           {SITE.firstName} <span className="text-brand">{SITE.lastName}</span>
         </a>
 
@@ -44,7 +27,8 @@ export default function Navbar() {
           {NAV_LINKS.map(({ id, label }) => (
             <li key={id} data-nav-item>
               <a
-                href={`#${id}`}
+                href={pageHref(id)}
+                aria-current={active === id ? 'page' : undefined}
                 className={clsx(
                   'relative py-1 text-[11px] font-semibold tracking-[0.22em] uppercase transition-colors duration-300 hover:text-white',
                   active === id ? 'text-white' : 'text-mute',
@@ -64,7 +48,7 @@ export default function Navbar() {
 
         <div className="flex items-center gap-3">
           <div className="hidden sm:block">
-            <Button href="#contact" variant="outline" size="sm">
+            <Button href={pageHref('contact')} variant="outline" size="sm">
               Let's talk
             </Button>
           </div>
@@ -92,7 +76,8 @@ export default function Navbar() {
           {NAV_LINKS.map(({ id, label }, i) => (
             <li key={id} className="border-b border-white/10">
               <a
-                href={`#${id}`}
+                href={pageHref(id)}
+                aria-current={active === id ? 'page' : undefined}
                 onClick={() => setOpen(false)}
                 className="flex items-baseline gap-4 py-5 font-display text-4xl uppercase transition-colors hover:text-brand"
               >

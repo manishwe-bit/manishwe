@@ -8,10 +8,14 @@ export default function Footer() {
         <p>
           © {new Date().getFullYear()} {SITE.name} — {SITE.title}
         </p>
-        <a href="#home" className="group flex items-center gap-2 hover:text-white">
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="group flex items-center gap-2 uppercase hover:text-white"
+        >
           Back to top
           <ArrowUp className="size-4 transition-transform group-hover:-translate-y-1" />
-        </a>
+        </button>
       </div>
     </footer>
   );
