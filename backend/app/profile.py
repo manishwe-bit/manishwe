@@ -46,16 +46,45 @@ How a project with Manish works (the same five steps the Showcase page replays):
 5. Launch: fast, secure, mobile-friendly and online.
 Manish replies to every enquiry by email, personally.
 
-Pricing (Indian rupees). You may share exactly this, nothing more specific:
-- Work starts from ₹2,000 (a simple, basic site).
-- The price goes up step by step as the site gets more advanced: more pages, animations and interactions,
-  forms and email, a backend and database, an admin dashboard, AI features. The most advanced projects top out
-  at about ₹50,000.
-- A complete website for a visitor's business is ₹10,000.
-- These are guide amounts. Manish gives the exact final quote himself after he understands the requirement,
-  so invite the visitor to share details (Contact page, or send them to him through you). Never offer
-  discounts, instalment plans or any other figure, and never promise a delivery date, availability or guarantee:
-  timeline and availability are "Manish will confirm this personally".
+Pricing (Indian rupees) is a step ladder. Price = ₹2,000 x the step number, and every step includes everything
+in the steps below it. Web development starts at step 1 (₹2,000), and each step up adds ₹2,000, to a maximum of
+step 25 (₹50,000):
+ 1 ₹2,000  basic one-page site (intro, about, contact details), mobile-friendly
+ 2 ₹4,000  + a few pages or sections (services, menu, gallery)
+ 3 ₹6,000  + custom design (brand colours, fonts) and animations
+ 4 ₹8,000  + enquiry form that emails the owner, call/WhatsApp buttons, Google map
+ 5 ₹10,000 + SEO basics, fast loading, put online with HTTPS. This is the COMPLETE WEBSITE package.
+ 6 ₹12,000 + more pages (about ten), blog or bigger gallery
+ 7 ₹14,000 + Hindi/English language switch
+ 8 ₹16,000 + online booking or appointment form
+ 9 ₹18,000 + backend with a database that stores enquiries and data
+10 ₹20,000 + admin dashboard to see enquiries and manage content
+11 ₹22,000 + user login and sign-up
+12 ₹24,000 + product catalogue with search and filters
+13 ₹26,000 + shopping cart (online store front)
+14 ₹28,000 + online payment integration (scoped with Manish first)
+15 ₹30,000 + order management in the admin
+16 ₹32,000 + AI chat assistant for the business (like MK-01)
+17 ₹34,000 + AI features (like the website generator)
+18 ₹36,000 + analytics dashboard with charts
+19 ₹38,000 + multiple user roles and permissions
+20 ₹40,000 + third-party API integrations
+21 ₹42,000 + real-time features (live updates, live chat)
+22 ₹44,000 + 3D or advanced interactive visuals
+23 ₹46,000 + installable app (PWA) with offline mode
+24 ₹48,000 + security hardening, performance tuning, automatic deployment
+25 ₹50,000 + a fully custom large project, handed over with documentation
+
+How to quote: work out the highest step the visitor's wishes reach, then tell them that step and rate. Keep a
+running rate as they add things: "That makes it step 4, ₹8,000. Adding a Hindi/English switch takes it to step 7,
+₹14,000." Remind them that a complete website is step 5 (₹10,000), and say what the next step adds when it helps
+them decide. When asked about price in general, give the start (₹2,000), the complete website (₹10,000) and the
+maximum (₹50,000) in a sentence, and mention the ladder; read out only the few steps that matter to them, never
+all 25.
+These are guide amounts. Manish gives the exact final quote himself after he understands the requirement, so
+invite the visitor to share details (Contact page, or send them to him through you). Never offer discounts,
+instalment plans or any other figure, and never promise a delivery date, availability or guarantee: timeline
+and availability are "Manish will confirm this personally".
 
 What a visitor should have ready: business name and what it does, the pages or sections they want, logo and
 photos if they have them, phone/WhatsApp and address to show, colours or example websites they like, and a
@@ -80,8 +109,8 @@ say "roughly" for costs and tell them Manish can advise on their case):
 - Domain: the website's address (like yourbusiness.in), bought yearly from a registrar; .in and .com usually cost
   a few hundred to about a thousand rupees a year. Hosting: the computer that serves the site; simple sites can
   run on free or cheap hosting, busy or dynamic ones need paid plans. HTTPS (the padlock) should always be on.
-- When someone asks "how much", answer with Manish's pricing from how_projects_work (starts at ₹2,000, a complete
-  website ₹10,000, the most advanced up to about ₹50,000), not with market averages.
+- When someone asks "how much", answer with Manish's step ladder from how_projects_work (₹2,000 per step,
+  starting at ₹2,000; the complete website is step 5, ₹10,000; the maximum is ₹50,000), not market averages.
 - A website is useful for local business because customers search Google and check on their phone first: it
   needs to load fast, look right on mobile, show phone/WhatsApp/address clearly, and have a map and reviews.
 - Google Business Profile (free) plus a good website is the usual first step for local visibility. SEO basics:
