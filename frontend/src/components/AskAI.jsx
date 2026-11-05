@@ -12,9 +12,9 @@ const STORE = 'mk01-chat';
 const VOICE_PREF = 'mk01-voice';
 const SUGGESTIONS = [
   'Show me a café website being built',
-  'Mujhe apne business ke liye website chahiye',
-  'Turn on X-ray mode',
-  "What's Manish's tech stack?",
+  'Meri dukaan ki website design karo',
+  'Domain aur hosting kya hota hai?',
+  'Website banwane ke liye mujhe kya dena hoga?',
 ];
 const GREETING = {
   role: 'assistant',
@@ -173,7 +173,8 @@ export default function AskAI() {
         aria-expanded={open}
         aria-label={open ? 'Close MK-01 chat' : 'Open MK-01, the AI robot'}
         className={clsx(
-          'robot-launcher fixed right-3 bottom-5 z-[63] flex items-center gap-2 border py-1 pr-4 pl-1 text-[11px] font-semibold tracking-[0.2em] uppercase transition-colors md:right-5',
+          // bottom-24: clear of the corner badges some hosts (e.g. Netlify) stick on the page
+          'robot-launcher fixed right-3 bottom-24 z-[63] flex items-center gap-2 border py-1 pr-4 pl-1 text-[11px] font-semibold tracking-[0.2em] uppercase transition-colors md:right-5',
           open ? 'border-white/20 bg-ink text-white' : 'border-arrow-cyan/50 bg-ink-2 text-white hover:border-arrow-cyan',
         )}
       >
@@ -186,7 +187,7 @@ export default function AskAI() {
         aria-label="MK-01, AI robot assistant"
         inert={!open}
         className={clsx(
-          'robot-panel fixed right-3 bottom-18 z-[63] flex h-[min(38rem,calc(100svh-7rem))] w-[min(25rem,calc(100vw-1.5rem))] origin-bottom-right flex-col border border-arrow-cyan/25 bg-ink-2 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.9)] transition-[opacity,transform] duration-300 md:right-5',
+          'robot-panel fixed right-3 bottom-40 z-[63] flex h-[min(38rem,calc(100svh-11rem))] w-[min(25rem,calc(100vw-1.5rem))] origin-bottom-right flex-col border border-arrow-cyan/25 bg-ink-2 shadow-[0_30px_80px_-20px_rgb(0_0_0/0.9)] transition-[opacity,transform] duration-300 md:right-5',
           open ? 'scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0',
         )}
       >

@@ -26,7 +26,7 @@ export default function GuideCursor({ page, name = 'Manish' }) {
 
   useEffect(() => {
     const later = (fn, ms) => timers.current.push(setTimeout(fn, ms));
-    const park = () => setPos({ x: window.innerWidth - 120, y: window.innerHeight - 130 }); // above the MK-01 button
+    const park = () => setPos({ x: window.innerWidth - 120, y: window.innerHeight - 215 }); // above the MK-01 button
     const cfg = TIPS[page];
     let pointing = false;
     // The guide is fixed to the viewport, so once the page scrolls it would point at the
