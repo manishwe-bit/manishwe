@@ -8,7 +8,7 @@ const FIELD =
 const LABEL = 'mb-2 block text-[10px] font-semibold tracking-[0.3em] text-mute uppercase';
 
 const NEEDS = ['New website', 'Online store', 'Website like a Showcase example', ...SERVICES.map((s) => s.title), 'Something else'];
-const BUDGETS = ['Under ₹10,000', '₹10,000 – ₹25,000', '₹25,000 – ₹50,000', '₹50,000+', 'Not sure yet'];
+const BUDGETS = ['₹2,000 – ₹5,000 (basic)', '₹10,000 (complete website)', '₹10,000 – ₹25,000 (more features)', '₹25,000 – ₹50,000 (advanced)', 'Not sure yet'];
 const TIMELINES = ['As soon as possible', 'Within 2 weeks', 'Within a month', 'Flexible'];
 
 // Other pages (the Showcase player) can pre-fill the form: setContactPrefill({ need, message }).
