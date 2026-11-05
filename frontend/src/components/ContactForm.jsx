@@ -90,7 +90,9 @@ export default function ContactForm() {
         await new Promise((r) => setTimeout(r, 3000));
       }
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
+        const data = await res.json().catch(() => null);
+        // A non-JSON answer means this isn't our API at all (e.g. a static host's 404 page): same as offline.
+        if (!data) throw new TypeError('Failed to fetch');
         throw new Error(res.status === 422 ? t('form.invalid') : data.detail || t('form.error'));
       }
       form.reset();

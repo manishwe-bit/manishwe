@@ -1,9 +1,7 @@
 # Optional: host only the React frontend on Netlify (the Render service already serves the whole site by itself).
-# Netlify builds frontend/ and the browser talks to the API directly, so no proxy rule is needed here.
-#
-# In Netlify: Site configuration > Environment variables, add
-#   VITE_API_URL = https://<your-render-service>.onrender.com     (no trailing slash)
-# The live-cursor WebSocket address is derived from it automatically.
+# Netlify builds frontend/. It has no /api of its own, so the site talks to the Render service directly:
+# frontend/src/config.js points any *.netlify.app address at https://manish-kaiwarty.onrender.com, and the API
+# allows the Netlify origin (backend/app/net.py). No proxy rule or environment variable is needed.
 [build]
   base = "frontend"
   command = "npm run build"

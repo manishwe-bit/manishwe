@@ -15,7 +15,10 @@ export const SITE = {
 
 // Backend base URL. Empty = same origin: the one-service deploy serves the site and /api together,
 // and in dev Vite proxies /api to the local server.
-export const API_URL = import.meta.env.VITE_API_URL ?? '';
+// A Netlify copy of the site has no /api of its own, so it always talks to the Render service directly
+// (the API allows the Netlify origin); no environment variable needed. Change this if the Render URL changes.
+const RENDER_API = 'https://manish-kaiwarty.onrender.com';
+export const API_URL = import.meta.env.VITE_API_URL ?? (location.hostname.endsWith('.netlify.app') ? RENDER_API : '');
 
 // Live cursors WebSocket. Default: the API on the same host (the one-service deploy, and Vite's proxy in dev).
 // If the frontend is hosted separately from the API, set VITE_LIVE_URL (wss://<api-host>/api/live).
