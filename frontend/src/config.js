@@ -7,7 +7,7 @@ export const SITE = {
   title: 'WEB DEVELOPER',
   tagline: 'Building modern, interactive and responsive digital experiences through creative web development.',
   about: 'I enjoy building modern websites that combine clean design, interactive experiences and functional technology.',
-  email: 'manishkaiwarty@gmail.com',
+  email: 'manishkaiwarty00@gmail.com',
   phone: '+91 91090 17468',
   phoneHref: 'tel:+919109017468',
   location: 'Bilaspur, Chhattisgarh',

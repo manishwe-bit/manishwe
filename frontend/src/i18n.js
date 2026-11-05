@@ -71,7 +71,8 @@ const EN = {
   'form.req': 'Your requirement', 'form.reqPh': 'Tell me about your business and what the website should do…',
   'form.send': 'Send requirement', 'form.sending': 'Sending', 'form.sent': "Thanks! Your requirement has reached Manish's inbox. He'll reply soon.",
   'form.invalid': 'Please check your details: name, a valid email, and a message of at least 10 characters.',
-  'form.offline': 'Could not reach the server. Please try again in a minute.', 'form.error': 'Something went wrong. Please try again.',
+  'form.offline': 'Could not reach the server. Please try again in a minute, or send it by email instead.', 'form.error': 'Something went wrong. Please try again.',
+  'form.waking': 'The server is waking up, this can take up to a minute. Please wait…', 'form.mailto': 'Send by email instead',
 
   'social.label': 'Social', 'social.title': 'Find me\nonline',
   'next.next': 'Next page', 'next.back': 'Back to', 'footer.top': 'Back to top',
@@ -125,7 +126,8 @@ const HI = {
   'form.req': 'आपकी ज़रूरत', 'form.reqPh': 'अपने बिज़नेस के बारे में और वेबसाइट से क्या चाहिए, बताइए…',
   'form.send': 'ज़रूरत भेजें', 'form.sending': 'भेजा जा रहा है', 'form.sent': 'धन्यवाद! आपकी ज़रूरत मनीष के ईमेल पर पहुँच गई है। वे जल्द जवाब देंगे।',
   'form.invalid': 'कृपया जाँचें: नाम, सही ईमेल और कम से कम 10 अक्षरों का मैसेज।',
-  'form.offline': 'सर्वर से जुड़ नहीं पाए। एक मिनट बाद फिर कोशिश करें।', 'form.error': 'कुछ गड़बड़ हुई। फिर से कोशिश करें।',
+  'form.offline': 'सर्वर से जुड़ नहीं पाए। एक मिनट बाद फिर कोशिश करें, या इसे ईमेल से भेज दें।', 'form.error': 'कुछ गड़बड़ हुई। फिर से कोशिश करें।',
+  'form.waking': 'सर्वर जाग रहा है, एक मिनट तक लग सकता है। कृपया रुकिए…', 'form.mailto': 'ईमेल से भेजें',
 
   'social.label': 'सोशल', 'social.title': 'मुझे ऑनलाइन\nखोजें',
   'next.next': 'अगला पेज', 'next.back': 'वापस', 'footer.top': 'ऊपर जाएँ',

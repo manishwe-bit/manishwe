@@ -23,7 +23,7 @@ services:
       - key: RESEND_API_KEY
         sync: false
       - key: NOTIFY_EMAIL
-        value: manishkaiwarty@gmail.com
+        value: manishkaiwarty00@gmail.com
       # MK-01 robot + AI website generator (key from console.anthropic.com).
       - key: ANTHROPIC_API_KEY
         sync: false

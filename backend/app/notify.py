@@ -17,7 +17,7 @@ from email.message import EmailMessage
 
 log = logging.getLogger("uvicorn.error")
 
-NOTIFY_EMAIL = os.getenv("NOTIFY_EMAIL", "manishkaiwarty@gmail.com")
+NOTIFY_EMAIL = os.getenv("NOTIFY_EMAIL", "manishkaiwarty00@gmail.com")
 MAIL_FROM = os.getenv("MAIL_FROM", "Portfolio <onboarding@resend.dev>")
 
 

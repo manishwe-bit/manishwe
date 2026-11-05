@@ -4,7 +4,7 @@ PROFILE = """
 Name: Manish Kumar Kaiwarty
 Role: Web developer (frontend + backend)
 Location: Bilaspur, Chhattisgarh, India
-Email: manishkaiwarty@gmail.com
+Email: manishkaiwarty00@gmail.com
 Phone: +91 91090 17468
 Portfolio: https://manishwe.netlify.app
 Instagram: @imanishh02 · LinkedIn: Manish Kumar Kaiwarty · GitHub: manishkaiwarty00-dotcom
