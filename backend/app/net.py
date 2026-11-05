@@ -4,8 +4,9 @@ import re
 from starlette.requests import HTTPConnection
 
 ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",") if o.strip()]
-# The Render static site's URL (Render may add a suffix if the name is taken).
-ALLOWED_ORIGIN_REGEX = os.getenv("ALLOWED_ORIGIN_REGEX", r"https://manish-kaiwarty-portfolio[a-z0-9-]*\.onrender\.com")
+# Sites allowed to call this API from another host: the Netlify copy of the frontend (and its deploy previews).
+# The site served by this same service is always allowed (see origin_allowed).
+ALLOWED_ORIGIN_REGEX = os.getenv("ALLOWED_ORIGIN_REGEX", r"https://([a-z0-9-]+--)?manishwe\.netlify\.app")
 
 
 def origin_allowed(origin: str | None, host: str | None = None) -> bool:

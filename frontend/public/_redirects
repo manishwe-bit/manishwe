@@ -1,2 +1,1 @@
-# Contact form API -> FastAPI backend on Render (also in netlify.toml for Git deploys)
-/api/*  https://manish-kaiwarty-api.onrender.com/api/:splat  200!
+# Netlify redirects. None needed: the site uses #/ hash routing and calls the API through VITE_API_URL.
